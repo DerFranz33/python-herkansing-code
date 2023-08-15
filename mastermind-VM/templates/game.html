@@ -1,23 +1,35 @@
 {% extends 'base.html' %}
 {% block title %}Mastermind{% endblock %}
 {% block content %}
-    <h1 class="text-bg-warning">{{nickname}}</h1>
-    <h2>Spelinstellingen</h2>
-    <form action="#" method="POST">
-        <label for="number_of_colours">Aantal kleuren</label>
-        <input type="number" name="number_of_colours">
+    <h1 class="text-bg-warning">{{nickname}}</h1>    
+    
+    <div class="text-bg-danger">
+        <h3>Spelinstellingen</h3>
+        <form action="#" method="POST" class="d-flex flex-column mb-3">
+            <div class="p-2">
+                <label for="number_of_colours">Aantal kleuren</label>
+                <input type="number" name="number_of_colours">
+            </div>
 
-        <label for="number_of_positions">Aantal posities</label>
-        <input type="number" name="number_of_positions">
+            <div class="p-2">
+                <label for="number_of_positions">Aantal posities</label>
+                <input type="number" name="number_of_positions">
+            </div>
 
-        <label for="doubles_allowed">Dubbele kleuren (moeilijk)</label>
-        <input type="checkbox" name="doubles_allowed">
+            <div class="p-2">
+                <label for="doubles_allowed">Dubbele kleuren (moeilijk)</label>
+                <input type="checkbox" name="doubles_allowed">
+            </div>
 
-        <label for="cheat_modus">Cheat modus</label>
-        <input type="checkbox" name="cheat_modus">
+            <div class="p-2">
+                <label for="cheat_modus">Cheat modus</label>
+                <input type="checkbox" name="cheat_modus">
+            </div>
 
+            <div class="p-2">
+                <input type="submit" value="submit">
+            </div>        
+        </form>
+    </div>
 
-
-        <input type="submit" value="submit">
-    </form>
 {% endblock %}
