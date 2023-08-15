@@ -1,7 +1,13 @@
 from flask import Flask, url_for, render_template, session, request, redirect
 import re as regex
+from database import config_table, config_tables
 
 app = Flask(__name__)
+
+config_table(app,'nicknames')
+
+
+
 
 app.secret_key = 'VeryHard@ToGuess666SecretKey#'
 
