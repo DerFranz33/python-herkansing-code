@@ -35,7 +35,9 @@ def reset_nickname():
 
 @app.route('/statistics')
 def statistics():
-    return render_template('statistics.html')
+    if __nickname_okay():
+        return render_template('statistics.html', nickname=session['nickname'])
+    return redirect(url_for('home'))
 
 def __nickname_okay():
     if 'nickname' in session:
