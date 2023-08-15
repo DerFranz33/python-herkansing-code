@@ -1,4 +1,5 @@
 from flask import Flask, url_for, render_template, session, request, redirect
+import re as regex
 
 app = Flask(__name__)
 
@@ -17,4 +18,9 @@ def home():
 def game():
     if('nickname' in session):
         nickname = session['nickname']
-    return f'<p>{nickname}</p>'
+        if(regex.search('[a-zA-Z]', nickname) == None):
+            return redirect(url_for('home'))
+        else:
+            return f'<p>{nickname}</p>'
+    else:
+        return redirect(url_for('home'))
