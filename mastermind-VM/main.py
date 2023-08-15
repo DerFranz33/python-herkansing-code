@@ -32,3 +32,15 @@ def game():
 def reset_nickname():
     session.pop('nickname', None)
     return redirect(url_for('home'))
+
+@app.route('/statistics')
+def statistics():
+    if __nickname_okay():
+        return render_template('statistics.html', nickname=session['nickname'])
+    return redirect(url_for('home'))
+
+def __nickname_okay():
+    if 'nickname' in session:
+        if regex.search('[a-zA-Z]', session['nickname']) != None:
+            return True
+    return False
