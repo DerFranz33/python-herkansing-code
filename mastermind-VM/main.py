@@ -12,7 +12,10 @@ def home():
         session['nickname'] = nickname
         return redirect(url_for('game'))
     else:
-        return render_template('index.html')
+        if('nickname' in session):
+            return redirect(url_for('game'))
+        else:
+            return render_template('index.html')
     
 @app.route('/game/')
 def game():
@@ -21,7 +24,7 @@ def game():
         if(regex.search('[a-zA-Z]', nickname) == None):
             return redirect(url_for('home'))
         else:
-            return f'<p>{nickname}</p>'
+            return render_template('game.html', nickname=nickname)
     else:
         return redirect(url_for('home'))
     
