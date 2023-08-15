@@ -24,3 +24,8 @@ def game():
             return f'<p>{nickname}</p>'
     else:
         return redirect(url_for('home'))
+    
+@app.route('/reset_nickname')
+def reset_nickname():
+    session.pop('nickname', None)
+    return redirect(url_for('home'))
