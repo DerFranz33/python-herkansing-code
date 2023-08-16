@@ -4,13 +4,14 @@ import re as regex
 
 app = Flask(__name__)
 app.secret_key = 'VeryHard@ToGuess666SecretKey#'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///players.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 db = SQLAlchemy(app)
 
 
 
 class players(db.Model):
-    nickname = db.Column('nickname', db.String(100), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    nickname = db.Column(db.String(100), unique=True)
 
     def __init__(self, nickname):
         self.nickname = nickname
@@ -23,7 +24,10 @@ def home():
     if(request.method == 'POST'):
         nickname =  request.form['nickname']
         session['nickname'] = nickname
-        
+        # Add player
+        temp_player = players(nickname)
+        db.session.add(temp_player)
+        db.session.commit()
         return redirect(url_for('game'))
     else:
         if('nickname' in session):
@@ -50,7 +54,7 @@ def reset_nickname():
 @app.route('/statistics')
 def statistics():
     if __nickname_okay():
-        return render_template('statistics.html', nickname=session['nickname'])
+        return render_template('statistics.html', nickname=session['nickname'], values=players.query.all())
     return redirect(url_for('home'))
 
 def __nickname_okay():
