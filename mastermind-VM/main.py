@@ -1,21 +1,29 @@
 from flask import Flask, url_for, render_template, session, request, redirect
+from flask_sqlalchemy import SQLAlchemy
 import re as regex
-from database import config_table, config_tables
 
 app = Flask(__name__)
-
-config_table(app,'nicknames')
-
-
-
-
 app.secret_key = 'VeryHard@ToGuess666SecretKey#'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///players.sqlite3'
+db = SQLAlchemy(app)
+
+
+
+class players(db.Model):
+    nickname = db.Column('nickname', db.String(100), primary_key=True)
+
+    def __init__(self, nickname):
+        self.nickname = nickname
+
+
+
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
     if(request.method == 'POST'):
         nickname =  request.form['nickname']
         session['nickname'] = nickname
+        add()
         return redirect(url_for('game'))
     else:
         if('nickname' in session):
@@ -50,3 +58,8 @@ def __nickname_okay():
         if regex.search('[a-zA-Z]', session['nickname']) != None:
             return True
     return False
+
+
+if __name__ == '__main__':
+    db.create_all()
+    app.run()
