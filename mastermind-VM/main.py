@@ -23,7 +23,7 @@ def home():
     if(request.method == 'POST'):
         nickname =  request.form['nickname']
         session['nickname'] = nickname
-        add()
+        
         return redirect(url_for('game'))
     else:
         if('nickname' in session):
