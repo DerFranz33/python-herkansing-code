@@ -35,8 +35,10 @@ def home():
         # Add player
         temp_player = Players()
         temp_player.nickname = nickname
-        db.session.add(temp_player)
-        db.session.commit()
+
+        if (db.session.execute(db.select(Players).filter_by(nickname=temp_player.nickname)).scalar_one_or_none() == None):
+            db.session.add(temp_player)
+            db.session.commit()
 
         # ------------- TODO just testing purposes --------------
         # _player = db.one_or_404(db.select(Players).filter_by(nickname='Henk'))
