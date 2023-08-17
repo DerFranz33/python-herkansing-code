@@ -83,12 +83,12 @@ def game():
         if(regex.search('[a-zA-Z]', nickname) == None):
             return redirect(url_for('home'))
         else:
-
-            if(request.method == 'POST'):
-                _number_of_colours = request.form['number_of_colours']
-                _number_of_positions = request.form['number_of_positions']
-                _doubles_allowed = request.form['doubles_allowed']
-                _cheat_modus = request.form['cheat_modus']
+            # TODO needed later for when it is not hardcoded
+            # if(request.method == 'POST'):
+            #     _number_of_colours = request.form['number_of_colours']
+            #     _number_of_positions = request.form['number_of_positions']
+            #     _doubles_allowed = request.form['doubles_allowed']
+            #     _cheat_modus = request.form['cheat_modus']
 
 
 
