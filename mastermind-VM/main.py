@@ -1,6 +1,7 @@
 from flask import Flask, url_for, render_template, session, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 import re as regex
+from datetime import timedelta
 
 
 # create the extension
@@ -9,7 +10,9 @@ db = SQLAlchemy()
 app = Flask(__name__)
 # configure the SQLite database, relative to the app instance folder
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
-
+# make sure session is cleaned very soon (TODO just for testing purposes)
+app.permanent_session_lifetime = timedelta(minutes=1)
+# set secret key which is needed for sqlalchemy to operate (TODO make it a difficult key)
 app.secret_key = 'ali'
 
 # initialize the app with the extension
@@ -21,10 +24,6 @@ class Players(db.Model):
 
 with app.app_context():
     db.create_all()
-
-# from flask import Flask, url_for, render_template, session, request, redirect
-# from flask_sqlalchemy import SQLAlchemy
-# import re as regex
 
 # db = SQLAlchemy()
 # app = Flask(__name__)
