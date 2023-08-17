@@ -59,13 +59,24 @@ def home():
 
             return render_template('index.html', nicknames=_nickames)
     
-@app.route('/game/')
+@app.route('/game/', methods=['POST', 'GET'])
 def game():
     if('nickname' in session):
         nickname = session['nickname']
         if(regex.search('[a-zA-Z]', nickname) == None):
             return redirect(url_for('home'))
         else:
+
+            if(request.method == 'POST'):
+                _number_of_colours = request.form['number_of_colours']
+                _number_of_positions = request.form['number_of_positions']
+                _doubles_allowed = request.form['doubles_allowed']
+                _cheat_modus = request.form['cheat_modus']
+
+
+
+
+
             return render_template('game.html', nickname=nickname)
     else:
         return redirect(url_for('home'))
