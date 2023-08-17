@@ -50,7 +50,11 @@ def home():
         if('nickname' in session):
             return redirect(url_for('game'))
         else:
-            return render_template('index.html')
+
+            nicknames = ('test1', 'test2', 'test3')
+
+
+            return render_template('index.html', nicknames=nicknames)
     
 @app.route('/game/')
 def game():
