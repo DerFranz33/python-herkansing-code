@@ -51,7 +51,8 @@ def home():
             return redirect(url_for('game'))
         else:
 
-            nicknames = ('test1', 'test2', 'test3')
+            # nicknames = ('test1', 'test2', 'test3')
+            nicknames = db.session.execute(db.select(Players)).scalar_one_or_none()
 
 
             return render_template('index.html', nicknames=nicknames)

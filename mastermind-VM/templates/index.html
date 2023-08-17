@@ -7,7 +7,9 @@
         <input type="submit" value="submit">
     </form>
     <h3>Existing Nicknames</h3>
-    {% for nickname in nicknames %}
-        <p>{{nickname}}</p>
-    {% endfor %}
+    {% if nicknames is not none %}
+        {% for nickname in nicknames %}
+            <p>{{nickname}}</p>
+        {% endfor %}
+    {% endif %}
 {% endblock %}
