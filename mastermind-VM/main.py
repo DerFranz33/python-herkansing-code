@@ -71,7 +71,7 @@ def game():
                 _number_of_colours = request.form['number_of_colours']
                 _number_of_positions = request.form['number_of_positions']
                 _doubles_allowed = request.form['doubles_allowed']
-                # _cheat_modus = request.form['cheat_modus']
+                _cheat_modus = request.form['cheat_modus']
 
 
 
