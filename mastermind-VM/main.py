@@ -57,7 +57,7 @@ def home():
             for player in _players:
                 _nickames.append(player.nickname)
 
-            return render_template('index.html', nicknames=_players)
+            return render_template('index.html', nicknames=_nickames)
     
 @app.route('/game/')
 def game():
