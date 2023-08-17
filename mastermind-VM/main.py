@@ -27,16 +27,6 @@ with app.app_context():
 
 
 
-
-# class Players(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-    # nickname = db.Column(db.String(100), unique=True)
-
-
-
-
-
-
 @app.route('/', methods=['POST', 'GET'])
 def home():
     if(request.method == 'POST'):
