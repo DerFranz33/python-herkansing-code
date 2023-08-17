@@ -53,7 +53,9 @@ def home():
 
             # nicknames = ('test1', 'test2', 'test3')
             _players = db.session.execute(db.select(Players)).scalars().all()
-            a = _players[0]
+            _nickames = []
+            for player in _players:
+                _nickames.append(player.nickname)
 
             return render_template('index.html', nicknames=_players)
     
