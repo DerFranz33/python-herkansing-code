@@ -78,8 +78,3 @@ def __nickname_okay():
         if regex.search('[a-zA-Z]', session['nickname']) != None:
             return True
     return False
-
-
-# if __name__ == '__main__':
-    
-#     app.run()
