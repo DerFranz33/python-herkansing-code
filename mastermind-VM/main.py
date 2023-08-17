@@ -38,17 +38,16 @@ def home():
         db.session.add(temp_player)
         db.session.commit()
 
-
         # ------------- TODO just testing purposes --------------
-        _player = db.one_or_404(db.select(Players).filter_by(nickname=session['nickname']))
+        # _player = db.one_or_404(db.select(Players).filter_by(nickname='Henk'))
+        # return render_template('game.html', player=_player.nickname)
         # -------------------------------------------------------
-        return render_template('game.html', player=_player.nickname)
 
         return redirect(url_for('game'))
     else:
-        # if('nickname' in session):
-            # return redirect(url_for('game'))
-        # else:
+        if('nickname' in session):
+            return redirect(url_for('game'))
+        else:
             return render_template('index.html')
     
 @app.route('/game/')
