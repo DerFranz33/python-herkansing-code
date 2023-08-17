@@ -59,13 +59,21 @@ def home():
 
             return render_template('index.html', nicknames=_nickames)
     
-@app.route('/game/')
+@app.route('/game/', methods=['POST', 'GET'])
 def game():
     if('nickname' in session):
         nickname = session['nickname']
         if(regex.search('[a-zA-Z]', nickname) == None):
             return redirect(url_for('home'))
         else:
+
+            if(request.method == 'POST'):
+                pass
+
+
+
+
+
             return render_template('game.html', nickname=nickname)
     else:
         return redirect(url_for('home'))
