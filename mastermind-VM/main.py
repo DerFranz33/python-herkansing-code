@@ -25,13 +25,6 @@ class Players(db.Model):
 with app.app_context():
     db.create_all()
 
-# db = SQLAlchemy()
-# app = Flask(__name__)
-# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-# db.init_app(app)
-
-# with app.app_context():
-#         db.create_all()
 
 
 
