@@ -11,7 +11,7 @@ app = Flask(__name__)
 # configure the SQLite database, relative to the app instance folder
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 # make sure session is cleaned very soon (TODO just for testing purposes)
-app.permanent_session_lifetime = timedelta(minutes=1)
+app.permanent_session_lifetime = timedelta(seconds=20)
 # set secret key which is needed for sqlalchemy to operate (TODO make it a difficult key)
 app.secret_key = 'ali'
 
