@@ -18,9 +18,26 @@ app.secret_key = 'ali'
 # initialize the app with the extension
 db.init_app(app)
 
+
+
+# ---------- CLASSES TODO remove here and put in a file called models.py -----------------------
+# TODO check if need nullables TODO rename Players to player
 class Players(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(100), unique=True)
+
+# class Game(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     start_time = db.Column(db.DateTime)
+#     end_time = db.Column(db.DateTime)
+#     score  = db.Column(db.Integer)
+#     # R -> speler
+#     # A -> antwoord type=list
+#     # R -> gok
+#     # A -> status
+#     pass
+
+#--------------- ENDCLASSES ----------------------------------------------------------------------
 
 with app.app_context():
     db.create_all()
