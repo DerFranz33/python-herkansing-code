@@ -52,10 +52,10 @@ def home():
         else:
 
             # nicknames = ('test1', 'test2', 'test3')
-            nicknames = db.session.execute(db.select(Players)).scalar_one_or_none()
+            _players = db.session.execute(db.select(Players)).scalars().all()
+            a = _players[0]
 
-
-            return render_template('index.html', nicknames=nicknames)
+            return render_template('index.html', nicknames=_players)
     
 @app.route('/game/')
 def game():
