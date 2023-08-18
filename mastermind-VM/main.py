@@ -85,7 +85,6 @@ def game():
         else:
             
             if(request.method == 'POST'):
-            # TODO hardcoded remove later
                 _number_of_colours = int(request.form['number_of_colours'])
                 _number_of_positions = int(request.form['number_of_positions'])
                 _doubles_allowed = request.form['doubles_allowed']
