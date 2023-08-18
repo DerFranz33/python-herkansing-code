@@ -52,7 +52,7 @@
         </div>
         <div class="row">
             {% for i in range(game_data.get('number_of_positions')) %}
-            <input class="col-sm" type="number" name=guess_position_{{i+1}}>
+            <input class="col-sm" type="number" min="1" max="{{game_data.get('number_of_colours')}}" name=guess_position_{{i+1}}>
             {% endfor %}  
         </div>
 
