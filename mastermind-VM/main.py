@@ -85,12 +85,17 @@ def game():
         else:
             
             if(request.method == 'POST'):
-                _number_of_colours = int(request.form['number_of_colours'])
-                _number_of_positions = int(request.form['number_of_positions'])
+                _number_of_colours = request.form['number_of_colours']
+                _number_of_positions = request.form['number_of_positions']
                 _doubles_allowed = request.form['doubles_allowed']
                 _cheat_modus = request.form['cheat_modus']
-                _game_data = {'number_of_colours':_number_of_colours, 'number_of_positions':_number_of_positions, 'doubles_allowed':_doubles_allowed, 'cheat_modus':_cheat_modus}
-                return redirect(url_for('game_session', game_id=1, game_data=_game_data))
+                
+                return redirect(url_for('game_session', game_id=1,
+                                        number_of_colours=_number_of_colours,
+                                        number_of_positions=_number_of_positions,
+                                        doubles_allowed=_doubles_allowed,
+                                        cheat_modus=_cheat_modus
+                                        ))
             else:
                 return render_template('game.html', nickname=nickname)
     else:
@@ -105,10 +110,25 @@ def game():
 
 
 
-@app.route('/game/<game_id>/<game_data>', methods=['POST', 'GET'])
-def game_session(game_id, game_data):
-    game_data = game_data
-    return render_template('game-session.html', nickname=nickname, game_data=game_data)
+@app.route('/game/<game_id>/<number_of_colours>/<number_of_positions>/<doubles_allowed>/<cheat_modus>', methods=['POST', 'GET'])
+def game_session(game_id, 
+                 number_of_colours,
+                 number_of_positions,
+                 doubles_allowed,
+                 cheat_modus
+                 ):
+
+    if __nickname_okay():
+        nickname = session['nickname']
+
+    number_of_colours = int(number_of_colours)
+    number_of_positions = int(number_of_positions)
+    return render_template('game-session.html', nickname=nickname,
+                            number_of_colours=number_of_colours,
+                            number_of_positions=number_of_positions,
+                            doubles_allowed=doubles_allowed,
+                            cheat_modus=cheat_modus
+                            )
     
 
 
