@@ -89,17 +89,36 @@ def game():
                 _number_of_positions = int(request.form['number_of_positions'])
                 _doubles_allowed = request.form['doubles_allowed']
                 _cheat_modus = request.form['cheat_modus']
-                game_data = {'number_of_colours':_number_of_colours, 'number_of_positions':_number_of_positions, 'doubles_allowed':_doubles_allowed, 'cheat_modus':_cheat_modus}
-                return render_template('game-session.html', nickname=nickname, game_data=game_data)
+                _game_data = {'number_of_colours':_number_of_colours, 'number_of_positions':_number_of_positions, 'doubles_allowed':_doubles_allowed, 'cheat_modus':_cheat_modus}
+                return redirect(url_for('game_session', game_id=1, game_data=_game_data))
             else:
                 return render_template('game.html', nickname=nickname)
     else:
         return redirect(url_for('home'))
     
-@app.route('/game/<game_id>', methods=['POST', 'GET'])
-def game_session():
-    pass
+
+
+
+
+
+
+
+
+
+@app.route('/game/<game_id>/<game_data>', methods=['POST', 'GET'])
+def game_session(game_id, game_data):
+    game_data = game_data
+    return render_template('game-session.html', nickname=nickname, game_data=game_data)
     
+
+
+
+
+
+
+
+
+
 @app.route('/reset_nickname')
 def reset_nickname():
     session.pop('nickname', None)
