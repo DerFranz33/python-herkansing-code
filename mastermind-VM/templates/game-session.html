@@ -19,7 +19,8 @@
             <form class="row" action="" method="post">
                 {% for i in range(game_data.get('number_of_positions')) %}
                 <input class="col-sm" type="number" min="1" max="{{game_data.get('number_of_colours')}}" name=guess_position_{{i+1}}>
-                {% endfor %}  
+                {% endfor %}
+                <input type="submit" value="submit">  
             </form>
         <!-- </div> -->
     </div>
