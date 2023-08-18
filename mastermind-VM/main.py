@@ -39,7 +39,7 @@ class Game(db.Model):
 class Players(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(100), unique=True)
-    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=True)
 
 
 
