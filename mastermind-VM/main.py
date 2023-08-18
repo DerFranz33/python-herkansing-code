@@ -29,9 +29,9 @@ class Game(db.Model):
     end_time = db.Column(db.DateTime)
     score  = db.Column(db.Integer)
 #     # R -> speler
-    players = db.relationship('Players', backref='game', lazy=True, uselist=False)
+    players_id = db.Column(db.Integer, db.ForeignKey('players.id'), nullable=True)
 #     # A -> antwoord type=list
-     # TODO jammer dat een array niet lijkt te kunnen
+    
 #     # R -> gok
 #     # A -> status
     status = db.Column(db.String(100))
@@ -39,12 +39,15 @@ class Game(db.Model):
 class Players(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(100), unique=True)
-    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=True)
+    Game = db.relationship('Game', backref='players', lazy=True)
+
 
 class Pin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     colour = db.Column(db.String(20)) # TODO als lukt maak enum van
     position = db.Column(db.Integer)
+
+    
 
 
 
