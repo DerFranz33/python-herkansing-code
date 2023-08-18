@@ -30,9 +30,6 @@ class Game(db.Model):
     score  = db.Column(db.Integer)
 #     # R -> speler
     players_id = db.Column(db.Integer, db.ForeignKey('players.id'), nullable=True)
-#     # A -> antwoord type=list
-    
-#     # R -> gok
 #     # A -> status
     status = db.Column(db.String(100))
 
