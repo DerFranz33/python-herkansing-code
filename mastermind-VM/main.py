@@ -41,6 +41,12 @@ class Players(db.Model):
     nickname = db.Column(db.String(100), unique=True)
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=True)
 
+class Pin(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    colour = db.Column(db.String(20)) # TODO als lukt maak enum van
+    position = db.Column(db.Integer)
+
+
 
 
 
