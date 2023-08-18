@@ -90,10 +90,6 @@ def game():
                 _number_of_positions = int(request.form['number_of_positions'])
                 _doubles_allowed = request.form['doubles_allowed']
                 _cheat_modus = request.form['cheat_modus']
-                # _number_of_colours = 8
-                # _number_of_positions = 4
-                # _doubles_allowed = True
-                # _cheat_modus = False
                 game_data = {'number_of_colours':_number_of_colours, 'number_of_positions':_number_of_positions, 'doubles_allowed':_doubles_allowed, 'cheat_modus':_cheat_modus}
                 return render_template('game-session.html', nickname=nickname, game_data=game_data)
             else:
