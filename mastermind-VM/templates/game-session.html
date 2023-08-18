@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Mastermind{% endblock %}
+{% block content %}
+    <h1 class="text-bg-info">{{nickname}}</h1> 
+    <h2>{{player}}</h2>  
+
+    <div class="container text-bg-info w-50">
+        
+        <div class="row">
+            {% for i in range(number_of_positions) %}
+            <div class="col-sm">ph {{i+1}}</div>
+            {% endfor %}  
+        </div>
+        <!-- <div class="row"> -->
+            <form class="row" action="" method="post">
+                {% for i in range(number_of_positions) %}
+                <input class="col-sm" type="number" min="1" max="{{number_of_colours}}" name=guess_position_{{i+1}}>
+                {% endfor %}
+                <input type="submit" value="submit">  
+            </form>
+        <!-- </div> -->
+    </div>
+
+{% endblock %}

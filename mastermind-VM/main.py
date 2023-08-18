@@ -18,9 +18,26 @@ app.secret_key = 'ali'
 # initialize the app with the extension
 db.init_app(app)
 
+
+
+# ---------- CLASSES TODO remove here and put in a file called models.py -----------------------
+# TODO check if need nullables TODO rename Players to player
 class Players(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(100), unique=True)
+
+# class Game(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     start_time = db.Column(db.DateTime)
+#     end_time = db.Column(db.DateTime)
+#     score  = db.Column(db.Integer)
+#     # R -> speler
+#     # A -> antwoord type=list
+#     # R -> gok
+#     # A -> status
+#     pass
+
+#--------------- ENDCLASSES ----------------------------------------------------------------------
 
 with app.app_context():
     db.create_all()
@@ -66,21 +83,62 @@ def game():
         if(regex.search('[a-zA-Z]', nickname) == None):
             return redirect(url_for('home'))
         else:
-
+            
             if(request.method == 'POST'):
                 _number_of_colours = request.form['number_of_colours']
                 _number_of_positions = request.form['number_of_positions']
                 _doubles_allowed = request.form['doubles_allowed']
                 _cheat_modus = request.form['cheat_modus']
-
-
-
-
-
-            return render_template('game.html', nickname=nickname)
+                
+                return redirect(url_for('game_session', game_id=1,
+                                        number_of_colours=_number_of_colours,
+                                        number_of_positions=_number_of_positions,
+                                        doubles_allowed=_doubles_allowed,
+                                        cheat_modus=_cheat_modus
+                                        ))
+            else:
+                return render_template('game.html', nickname=nickname)
     else:
         return redirect(url_for('home'))
     
+
+
+
+
+
+
+
+
+
+@app.route('/game/<game_id>/<number_of_colours>/<number_of_positions>/<doubles_allowed>/<cheat_modus>', methods=['POST', 'GET'])
+def game_session(game_id, 
+                 number_of_colours,
+                 number_of_positions,
+                 doubles_allowed,
+                 cheat_modus
+                 ):
+
+    if __nickname_okay():
+        nickname = session['nickname']
+
+    number_of_colours = int(number_of_colours)
+    number_of_positions = int(number_of_positions)
+    return render_template('game-session.html', nickname=nickname,
+                            number_of_colours=number_of_colours,
+                            number_of_positions=number_of_positions,
+                            doubles_allowed=doubles_allowed,
+                            cheat_modus=cheat_modus
+                            )
+    
+
+
+
+
+
+
+
+
+
 @app.route('/reset_nickname')
 def reset_nickname():
     session.pop('nickname', None)
