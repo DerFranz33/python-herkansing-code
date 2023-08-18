@@ -51,10 +51,9 @@
             {% endfor %}  
         </div>
         <div class="row">
-            <input class="col-sm" type="number">
-            <input class="col-sm" type="number">
-            <input class="col-sm" type="number">
-            <input class="col-sm" type="number">
+            {% for i in range(game_data.get('number_of_positions')) %}
+            <input class="col-sm" type="number" name=guess_position_{{i+1}}>
+            {% endfor %}  
         </div>
 
     </div>
