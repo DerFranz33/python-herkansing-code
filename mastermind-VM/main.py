@@ -22,20 +22,28 @@ db.init_app(app)
 
 # ---------- CLASSES TODO remove here and put in a file called models.py -----------------------
 # TODO check if need nullables TODO rename Players to player
+
+class Game(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start_time = db.Column(db.DateTime)
+    end_time = db.Column(db.DateTime)
+    score  = db.Column(db.Integer)
+#     # R -> speler
+    players = db.relationship('Players', backref='game', lazy=True, uselist=False)
+#     # A -> antwoord type=list
+     # TODO jammer dat een array niet lijkt te kunnen
+#     # R -> gok
+#     # A -> status
+    status = db.Column(db.String(100))
+
 class Players(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(100), unique=True)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
 
-# class Game(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     start_time = db.Column(db.DateTime)
-#     end_time = db.Column(db.DateTime)
-#     score  = db.Column(db.Integer)
-#     # R -> speler
-#     # A -> antwoord type=list
-#     # R -> gok
-#     # A -> status
-#     pass
+
+
+
 
 #--------------- ENDCLASSES ----------------------------------------------------------------------
 
