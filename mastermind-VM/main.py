@@ -123,6 +123,8 @@ def game():
                 _number_of_positions = request.form['number_of_positions']
                 _doubles_allowed = request.form['doubles_allowed']
                 _cheat_modus = request.form['cheat_modus']
+                
+                
 
 
                 game_id = __generate_game(positions_length=_number_of_positions,
@@ -224,10 +226,15 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
 
     positions_length = int(positions_length)
     amount_of_colours = int(amount_of_colours)
+    # TODO lelijke code hierbeneden
     if(can_be_double == 'true' or can_be_double == 'True'):
         can_be_double = True
     elif(can_be_double == 'false' or can_be_double == 'False'):
         can_be_double = False
+    if(cheat_modus == 'true' or cheat_modus == 'True'):
+        cheat_modus = True
+    elif(cheat_modus == 'false' or cheat_modus == 'False'):
+        cheat_modus = False
 
     print('') # TODO remove
     
@@ -240,7 +247,8 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
     temp_game.amount_of_colours = amount_of_colours
     temp_game.amount_of_positions = positions_length
     temp_game.players_id = players_id
-    temp_game.status = 'active'
+    # temp_game.status = 'active' TODO remove
+    temp_game.cheat_modus = cheat_modus
     db.session.add(temp_game)
     db.session.commit()
 
