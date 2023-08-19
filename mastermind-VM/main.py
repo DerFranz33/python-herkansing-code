@@ -229,7 +229,7 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, players_
             temp_pin = Pin()
             temp_pin.colour = randrange(1,amount_of_colours)
             temp_pin.position = counter
-            temp_pin.game_id = 1 # TODO
+            temp_pin.game_id = temp_game.id
             db.session.add(temp_pin)
             db.session.commit()
             counter += counter
@@ -243,7 +243,7 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, players_
                 temp_pin = Pin()
                 temp_pin.colour = randrange(1,amount_of_colours)
                 temp_pin.position = counter
-                temp_pin.game_id = 1 # TODO
+                temp_pin.game_id = temp_game.id
                 db.session.add(temp_pin)
                 db.session.commit()
                 counter += 1
