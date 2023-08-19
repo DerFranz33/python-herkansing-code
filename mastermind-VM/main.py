@@ -2,6 +2,8 @@ from flask import Flask, url_for, render_template, session, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 import re as regex
 from datetime import timedelta
+from enum import Enum
+from random import randrange
 
 
 # create the extension
@@ -47,7 +49,17 @@ class Pin(db.Model):
     position = db.Column(db.Integer)
 
     
-
+class Colour(Enum):
+    RED = 1
+    BLUE = 2
+    GREEN = 3
+    YELLOW = 4
+    ORANGE = 5
+    BROWN = 6
+    TURQUOISE = 7
+    PURPLE = 8
+    PINK = 9
+    OLIVE = 10
 
 
 
@@ -139,6 +151,14 @@ def game_session(game_id,
 
     number_of_colours = int(number_of_colours)
     number_of_positions = int(number_of_positions)
+
+    if(doubles_allowed == 'true' or doubles_allowed == 'True'):
+        doubles_allowed = True
+    elif(doubles_allowed == 'false' or doubles_allowed == 'False'):
+        doubles_allowed = False
+
+    __generate_random_code(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed)
+
     return render_template('game-session.html', nickname=nickname,
                             number_of_colours=number_of_colours,
                             number_of_positions=number_of_positions,
@@ -166,8 +186,39 @@ def statistics():
         return render_template('statistics.html', nickname=session['nickname'])
     return redirect(url_for('home'))
 
+
+
+
+# --------------- HELPERS AND LOGIC -----------------------
+
+
 def __nickname_okay():
     if 'nickname' in session:
         if regex.search('[a-zA-Z]', session['nickname']) != None:
             return True
     return False
+
+
+def __generate_random_code(positions_length, amount_of_colours, can_be_double):
+    code = []
+    end_range = amount_of_colours + 1
+    if(can_be_double):
+        for counter in range(positions_length):
+            code.append(randrange(1,amount_of_colours))
+    else:
+        counter = 0
+        while(counter < positions_length):
+            num = randrange(1,amount_of_colours)
+            if(num not in code):
+                code.append(num)
+                counter += 1
+     
+
+
+
+
+    pass
+
+
+
+# -------------------- ENDHELPERS --------------------------
