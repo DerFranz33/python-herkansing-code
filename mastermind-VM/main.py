@@ -2,6 +2,9 @@ from flask import Flask, url_for, render_template, session, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 import re as regex
 from datetime import timedelta
+from datetime import datetime
+from enum import Enum
+from random import randrange
 
 
 # create the extension
@@ -22,20 +25,46 @@ db.init_app(app)
 
 # ---------- CLASSES TODO remove here and put in a file called models.py -----------------------
 # TODO check if need nullables TODO rename Players to player
+
+class Game(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start_time = db.Column(db.DateTime)
+    end_time = db.Column(db.DateTime)
+    score  = db.Column(db.Integer)
+#     # R -> speler
+    players_id = db.Column(db.Integer, db.ForeignKey('players.id'), nullable=True)
+#     # A -> status
+    status = db.Column(db.String(100))
+
 class Players(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(100), unique=True)
+    Game = db.relationship('Game', backref='players', lazy=True)
 
-# class Game(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     start_time = db.Column(db.DateTime)
-#     end_time = db.Column(db.DateTime)
-#     score  = db.Column(db.Integer)
-#     # R -> speler
-#     # A -> antwoord type=list
-#     # R -> gok
-#     # A -> status
-#     pass
+
+class Pin(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    players_id = db.Column(db.Integer, db.ForeignKey('players.id'), nullable=True)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=True)
+    colour = db.Column(db.String(20)) # TODO als lukt maak enum van
+    position = db.Column(db.Integer)
+
+    
+class Colour(Enum):
+    RED = 1
+    BLUE = 2
+    GREEN = 3
+    YELLOW = 4
+    ORANGE = 5
+    BROWN = 6
+    TURQUOISE = 7
+    PURPLE = 8
+    PINK = 9
+    OLIVE = 10
+
+
+
+
 
 #--------------- ENDCLASSES ----------------------------------------------------------------------
 
@@ -123,6 +152,15 @@ def game_session(game_id,
 
     number_of_colours = int(number_of_colours)
     number_of_positions = int(number_of_positions)
+
+    if(doubles_allowed == 'true' or doubles_allowed == 'True'):
+        doubles_allowed = True
+    elif(doubles_allowed == 'false' or doubles_allowed == 'False'):
+        doubles_allowed = False
+
+    
+    __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, players_name=session['nickname'])
+
     return render_template('game-session.html', nickname=nickname,
                             number_of_colours=number_of_colours,
                             number_of_positions=number_of_positions,
@@ -150,8 +188,73 @@ def statistics():
         return render_template('statistics.html', nickname=session['nickname'])
     return redirect(url_for('home'))
 
+
+
+
+# --------------- HELPERS AND LOGIC -----------------------
+
+
 def __nickname_okay():
     if 'nickname' in session:
         if regex.search('[a-zA-Z]', session['nickname']) != None:
             return True
     return False
+
+
+def __generate_game(positions_length, amount_of_colours, can_be_double, players_name):
+    
+    player = db.session.execute(db.select(Players).filter_by(nickname=players_name)).scalar_one()
+    players_id = player.id
+
+    temp_game = Game()
+    temp_game.start_time = datetime.now()
+    temp_game.score = 0
+    temp_game.players_id = players_id
+    temp_game.status = 'active'
+    db.session.add(temp_game)
+    db.session.commit()
+
+    games = db.session.execute(db.select(Game)).scalars().all()
+    for game in games:
+        print('game_id: {}, start_time: {}, score: {}, players_id: {}, status: {}'.format(game.id, game.start_time, game.score, game.players_id, game.status))
+
+
+
+
+
+    end_range = amount_of_colours + 1
+    if(can_be_double):
+        counter = 1
+        while counter <= range(positions_length):
+            temp_pin = Pin()
+            temp_pin.colour = randrange(1,amount_of_colours)
+            temp_pin.position = counter
+            temp_pin.game_id = temp_game.id
+            db.session.add(temp_pin)
+            db.session.commit()
+            counter += counter
+    else:
+        temp_colours = []
+        counter = 1
+        while(counter <= positions_length):
+            colour = randrange(1,amount_of_colours)
+            if(colour not in temp_colours):
+                temp_colours.append(colour)
+                temp_pin = Pin()
+                temp_pin.colour = randrange(1,amount_of_colours)
+                temp_pin.position = counter
+                temp_pin.game_id = temp_game.id
+                db.session.add(temp_pin)
+                db.session.commit()
+                counter += 1
+     
+
+    pins = db.session.execute(db.select(Pin)).scalars().all()
+    for pin in pins:
+        print('pin_id: {}, colour: {}, position: {}, game_id: {}'.format(pin.id, pin.colour, pin.position, pin.game_id))
+
+    pass
+
+
+
+# -------------------- ENDHELPERS --------------------------
