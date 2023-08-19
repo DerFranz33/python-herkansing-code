@@ -182,6 +182,16 @@ def game_session(game_id):
     # TODO this needs to be in Game route
     # __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, cheat_modus=cheat_modus, players_name=session['nickname'])
 
+    if(request.method == 'POST'):
+        guess = []
+        counter = 1
+        while counter <= number_of_positions:
+            guess.append(request.form['guess_position_{}'.format(counter)])
+            counter += 1
+        
+
+        if (__is_game_won(answer, guess)):
+            pass
     
     return render_template('game-session.html', nickname=nickname,
                             number_of_colours=number_of_colours,
@@ -303,6 +313,13 @@ def __get_answer(game_id):
         if pin.position == 1 or pin.position == 2 or pin.position == 3 or pin.position == 4:
             answer_pins.append(pin)
     return answer_pins
+
+
+def __is_game_won(pin_answer, pin_guess):
+        # counter = 0
+        # while counter < range(len(pin_answer)):
+        #     pass
+        pass
 
 
 
