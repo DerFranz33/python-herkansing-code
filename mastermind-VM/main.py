@@ -202,6 +202,8 @@ def __nickname_okay():
 
 
 def __generate_game(positions_length, amount_of_colours, can_be_double, players_name):
+
+    print('') # TODO remove
     
     player = db.session.execute(db.select(Players).filter_by(nickname=players_name)).scalar_one()
     players_id = player.id
@@ -219,15 +221,12 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, players_
         print('game_id: {}, start_time: {}, score: {}, players_id: {}, status: {}'.format(game.id, game.start_time, game.score, game.players_id, game.status))
 
 
-
-
-
-    end_range = amount_of_colours + 1
+    end_range_colours = amount_of_colours + 1
     if(can_be_double):
         counter = 1
         while counter <= range(positions_length):
             temp_pin = Pin()
-            temp_pin.colour = randrange(1,amount_of_colours)
+            temp_pin.colour = randrange(1,end_range_colours)
             temp_pin.position = counter
             temp_pin.game_id = temp_game.id
             db.session.add(temp_pin)
@@ -237,11 +236,11 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, players_
         temp_colours = []
         counter = 1
         while(counter <= positions_length):
-            colour = randrange(1,amount_of_colours)
+            colour = randrange(1,end_range_colours)
             if(colour not in temp_colours):
                 temp_colours.append(colour)
                 temp_pin = Pin()
-                temp_pin.colour = randrange(1,amount_of_colours)
+                temp_pin.colour = randrange(1,end_range_colours)
                 temp_pin.position = counter
                 temp_pin.game_id = temp_game.id
                 db.session.add(temp_pin)
