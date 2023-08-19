@@ -119,13 +119,17 @@ def game():
                 _number_of_positions = request.form['number_of_positions']
                 _doubles_allowed = request.form['doubles_allowed']
                 _cheat_modus = request.form['cheat_modus']
+
+
+                game_id = __generate_game(positions_length=_number_of_positions,
+                                amount_of_colours=_number_of_colours,
+                                can_be_double=_doubles_allowed,
+                                cheat_modus=_cheat_modus,
+                                players_name=session['nickname'])
+
+
                 
-                return redirect(url_for('game_session', game_id=1,
-                                        number_of_colours=_number_of_colours,
-                                        number_of_positions=_number_of_positions,
-                                        doubles_allowed=_doubles_allowed,
-                                        cheat_modus=_cheat_modus
-                                        ))
+                return redirect(url_for('game_session', game_id=game_id))
             else:
                 return render_template('game.html', nickname=nickname)
     else:
@@ -140,17 +144,23 @@ def game():
 
 
 # TODO refactor: only use game_id and get rest of values out of db
-@app.route('/game/<game_id>/<number_of_colours>/<number_of_positions>/<doubles_allowed>/<cheat_modus>', methods=['POST', 'GET'])
-def game_session(game_id, 
-                 number_of_colours,
-                 number_of_positions,
-                 doubles_allowed,
-                 cheat_modus
-                 ):
+@app.route('/game/<game_id>', methods=['POST', 'GET'])
+def game_session(game_id):
     
 
     if __nickname_okay():
         nickname = session['nickname']
+
+
+
+
+
+    game = db.session.execute(db.select(Game).filter_by(id=game_id)).scalar_one_or_none()
+
+
+
+
+
 
     number_of_colours = int(number_of_colours)
     number_of_positions = int(number_of_positions)
@@ -204,7 +214,14 @@ def __nickname_okay():
     return False
 
 
-def __generate_game(positions_length, amount_of_colours, can_be_double, players_name):
+def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_modus, players_name):
+
+    positions_length = int(positions_length)
+    amount_of_colours = int(amount_of_colours)
+    if(can_be_double == 'true' or can_be_double == 'True'):
+        can_be_double = True
+    elif(can_be_double == 'false' or can_be_double == 'False'):
+        can_be_double = False
 
     print('') # TODO remove
     
@@ -255,7 +272,7 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, players_
     for pin in pins:
         print('pin_id: {}, colour: {}, position: {}, game_id: {}'.format(pin.id, pin.colour, pin.position, pin.game_id))
 
-    pass
+    return temp_game.id
 
 
 
