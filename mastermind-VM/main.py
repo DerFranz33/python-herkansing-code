@@ -14,7 +14,7 @@ app = Flask(__name__)
 # configure the SQLite database, relative to the app instance folder
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 # make sure session is cleaned very soon (TODO just for testing purposes)
-app.permanent_session_lifetime = timedelta(seconds=20)
+# app.permanent_session_lifetime = timedelta(seconds=20)
 # set secret key which is needed for sqlalchemy to operate (TODO make it a difficult key)
 app.secret_key = 'ali'
 
@@ -316,10 +316,14 @@ def __get_answer(game_id):
 
 
 def __is_game_won(pin_answer, pin_guess):
-        # counter = 0
-        # while counter < range(len(pin_answer)):
-        #     pass
-        pass
+        counter = 0
+        while counter < len(pin_answer):
+           a = pin_answer[counter].colour
+           b = pin_guess[counter]
+           if (pin_answer[counter].colour != pin_guess[counter]):
+               return False
+           counter += 1
+        return True
 
 
 
