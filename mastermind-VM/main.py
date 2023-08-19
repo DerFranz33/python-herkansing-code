@@ -31,10 +31,14 @@ class Game(db.Model):
     start_time = db.Column(db.DateTime)
     end_time = db.Column(db.DateTime)
     score  = db.Column(db.Integer)
+    amount_of_colours = db.Column(db.Integer)
+    amount_of_positions = db.Column(db.Integer)
+    doubles_allowed = db.Column(db.Boolean)
+    cheat_modus = db.Column(db.Boolean)
 #     # R -> speler
     players_id = db.Column(db.Integer, db.ForeignKey('players.id'), nullable=True)
 #     # A -> status
-    status = db.Column(db.String(100))
+    is_won = db.Column(db.Boolean, nullable=True)
 
 class Players(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -113,18 +117,23 @@ def game():
             return redirect(url_for('home'))
         else:
             
+            # TODO POST in db nowhere else
             if(request.method == 'POST'):
                 _number_of_colours = request.form['number_of_colours']
                 _number_of_positions = request.form['number_of_positions']
                 _doubles_allowed = request.form['doubles_allowed']
                 _cheat_modus = request.form['cheat_modus']
+
+
+                game_id = __generate_game(positions_length=_number_of_positions,
+                                amount_of_colours=_number_of_colours,
+                                can_be_double=_doubles_allowed,
+                                cheat_modus=_cheat_modus,
+                                players_name=session['nickname'])
+
+
                 
-                return redirect(url_for('game_session', game_id=1,
-                                        number_of_colours=_number_of_colours,
-                                        number_of_positions=_number_of_positions,
-                                        doubles_allowed=_doubles_allowed,
-                                        cheat_modus=_cheat_modus
-                                        ))
+                return redirect(url_for('game_session', game_id=game_id))
             else:
                 return render_template('game.html', nickname=nickname)
     else:
@@ -138,29 +147,39 @@ def game():
 
 
 
-
-@app.route('/game/<game_id>/<number_of_colours>/<number_of_positions>/<doubles_allowed>/<cheat_modus>', methods=['POST', 'GET'])
-def game_session(game_id, 
-                 number_of_colours,
-                 number_of_positions,
-                 doubles_allowed,
-                 cheat_modus
-                 ):
+# TODO refactor: only use game_id and get rest of values out of db
+@app.route('/game/<game_id>', methods=['POST', 'GET'])
+def game_session(game_id):
+    
 
     if __nickname_okay():
         nickname = session['nickname']
 
-    number_of_colours = int(number_of_colours)
-    number_of_positions = int(number_of_positions)
 
-    if(doubles_allowed == 'true' or doubles_allowed == 'True'):
-        doubles_allowed = True
-    elif(doubles_allowed == 'false' or doubles_allowed == 'False'):
-        doubles_allowed = False
+
+
+
+    game = db.session.execute(db.select(Game).filter_by(id=game_id)).scalar_one_or_none()
+
+
+
+
+
+
+    number_of_colours = game.amount_of_colours
+    number_of_positions = game.amount_of_positions
+    doubles_allowed = game.doubles_allowed
+    cheat_modus = game.cheat_modus
+
+    # if(doubles_allowed == 'true' or doubles_allowed == 'True'):
+    #     doubles_allowed = True
+    # elif(doubles_allowed == 'false' or doubles_allowed == 'False'):
+    #     doubles_allowed = False
+
+    # TODO this needs to be in Game route
+    # __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, cheat_modus=cheat_modus, players_name=session['nickname'])
 
     
-    __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, players_name=session['nickname'])
-
     return render_template('game-session.html', nickname=nickname,
                             number_of_colours=number_of_colours,
                             number_of_positions=number_of_positions,
@@ -201,7 +220,16 @@ def __nickname_okay():
     return False
 
 
-def __generate_game(positions_length, amount_of_colours, can_be_double, players_name):
+def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_modus, players_name):
+
+    positions_length = int(positions_length)
+    amount_of_colours = int(amount_of_colours)
+    if(can_be_double == 'true' or can_be_double == 'True'):
+        can_be_double = True
+    elif(can_be_double == 'false' or can_be_double == 'False'):
+        can_be_double = False
+
+    print('') # TODO remove
     
     player = db.session.execute(db.select(Players).filter_by(nickname=players_name)).scalar_one()
     players_id = player.id
@@ -209,25 +237,26 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, players_
     temp_game = Game()
     temp_game.start_time = datetime.now()
     temp_game.score = 0
+    temp_game.amount_of_colours = amount_of_colours
+    temp_game.amount_of_positions = positions_length
     temp_game.players_id = players_id
     temp_game.status = 'active'
     db.session.add(temp_game)
     db.session.commit()
 
-    games = db.session.execute(db.select(Game)).scalars().all()
+    games = db.session.execute(db.select(Game)).scalars().all() # TODO use __str__ here somewhere or something
     for game in games:
-        print('game_id: {}, start_time: {}, score: {}, players_id: {}, status: {}'.format(game.id, game.start_time, game.score, game.players_id, game.status))
+        print('game_id: {}, start_time: {}, score: {}, players_id: {}, colours: {}, positions: {}, cheat_modus: {}, is_won: {}'
+              .format(game.id, game.start_time, game.score, game.players_id, game.amount_of_colours,
+                       game.amount_of_positions, game.cheat_modus, game.is_won))
 
 
-
-
-
-    end_range = amount_of_colours + 1
+    end_range_colours = amount_of_colours + 1
     if(can_be_double):
         counter = 1
-        while counter <= range(positions_length):
+        while counter <= positions_length:
             temp_pin = Pin()
-            temp_pin.colour = randrange(1,amount_of_colours)
+            temp_pin.colour = randrange(1,end_range_colours)
             temp_pin.position = counter
             temp_pin.game_id = temp_game.id
             db.session.add(temp_pin)
@@ -237,11 +266,11 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, players_
         temp_colours = []
         counter = 1
         while(counter <= positions_length):
-            colour = randrange(1,amount_of_colours)
+            colour = randrange(1,end_range_colours)
             if(colour not in temp_colours):
                 temp_colours.append(colour)
                 temp_pin = Pin()
-                temp_pin.colour = randrange(1,amount_of_colours)
+                temp_pin.colour = randrange(1,end_range_colours)
                 temp_pin.position = counter
                 temp_pin.game_id = temp_game.id
                 db.session.add(temp_pin)
@@ -253,7 +282,7 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, players_
     for pin in pins:
         print('pin_id: {}, colour: {}, position: {}, game_id: {}'.format(pin.id, pin.colour, pin.position, pin.game_id))
 
-    pass
+    return temp_game.id
 
 
 
