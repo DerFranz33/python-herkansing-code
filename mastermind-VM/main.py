@@ -14,7 +14,7 @@ app = Flask(__name__)
 # configure the SQLite database, relative to the app instance folder
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 # make sure session is cleaned very soon (TODO just for testing purposes)
-app.permanent_session_lifetime = timedelta(seconds=20)
+# app.permanent_session_lifetime = timedelta(seconds=20)
 # set secret key which is needed for sqlalchemy to operate (TODO make it a difficult key)
 app.secret_key = 'ali'
 
@@ -123,6 +123,8 @@ def game():
                 _number_of_positions = request.form['number_of_positions']
                 _doubles_allowed = request.form['doubles_allowed']
                 _cheat_modus = request.form['cheat_modus']
+                
+                
 
 
                 game_id = __generate_game(positions_length=_number_of_positions,
@@ -170,6 +172,7 @@ def game_session(game_id):
     number_of_positions = game.amount_of_positions
     doubles_allowed = game.doubles_allowed
     cheat_modus = game.cheat_modus
+    answer = __get_answer(game_id)
 
     # if(doubles_allowed == 'true' or doubles_allowed == 'True'):
     #     doubles_allowed = True
@@ -179,12 +182,23 @@ def game_session(game_id):
     # TODO this needs to be in Game route
     # __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, cheat_modus=cheat_modus, players_name=session['nickname'])
 
+    if(request.method == 'POST'):
+        guess = []
+        counter = 1
+        while counter <= number_of_positions:
+            guess.append(request.form['guess_position_{}'.format(counter)])
+            counter += 1
+        
+
+        if (__is_game_won(answer, guess)):
+            pass
     
     return render_template('game-session.html', nickname=nickname,
                             number_of_colours=number_of_colours,
                             number_of_positions=number_of_positions,
                             doubles_allowed=doubles_allowed,
-                            cheat_modus=cheat_modus
+                            cheat_modus=cheat_modus,
+                            answer = answer
                             )
     
 
@@ -224,10 +238,15 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
 
     positions_length = int(positions_length)
     amount_of_colours = int(amount_of_colours)
+    # TODO lelijke code hierbeneden
     if(can_be_double == 'true' or can_be_double == 'True'):
         can_be_double = True
     elif(can_be_double == 'false' or can_be_double == 'False'):
         can_be_double = False
+    if(cheat_modus == 'true' or cheat_modus == 'True'):
+        cheat_modus = True
+    elif(cheat_modus == 'false' or cheat_modus == 'False'):
+        cheat_modus = False
 
     print('') # TODO remove
     
@@ -240,7 +259,8 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
     temp_game.amount_of_colours = amount_of_colours
     temp_game.amount_of_positions = positions_length
     temp_game.players_id = players_id
-    temp_game.status = 'active'
+    # temp_game.status = 'active' TODO remove
+    temp_game.cheat_modus = cheat_modus
     db.session.add(temp_game)
     db.session.commit()
 
@@ -283,6 +303,27 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
         print('pin_id: {}, colour: {}, position: {}, game_id: {}'.format(pin.id, pin.colour, pin.position, pin.game_id))
 
     return temp_game.id
+
+
+def __get_answer(game_id):
+
+    all_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id)).scalars().all()
+    answer_pins = []
+    for pin in all_pins: # Slightly redundand but failsafe
+        if pin.position == 1 or pin.position == 2 or pin.position == 3 or pin.position == 4:
+            answer_pins.append(pin)
+    return answer_pins
+
+
+def __is_game_won(pin_answer, pin_guess):
+        counter = 0
+        while counter < len(pin_answer):
+           a = pin_answer[counter].colour
+           b = pin_guess[counter]
+           if (pin_answer[counter].colour != pin_guess[counter]):
+               return False
+           counter += 1
+        return True
 
 
 
