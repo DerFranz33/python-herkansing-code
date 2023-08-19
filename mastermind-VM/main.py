@@ -191,7 +191,7 @@ def game_session(game_id):
         
 
         if (__is_game_won(answer, guess)):
-            pass
+            print('TODO yeah game won!!!!')
     
     return render_template('game-session.html', nickname=nickname,
                             number_of_colours=number_of_colours,
