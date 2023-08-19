@@ -172,6 +172,7 @@ def game_session(game_id):
     number_of_positions = game.amount_of_positions
     doubles_allowed = game.doubles_allowed
     cheat_modus = game.cheat_modus
+    answer = __get_answer(game_id)
 
     # if(doubles_allowed == 'true' or doubles_allowed == 'True'):
     #     doubles_allowed = True
@@ -186,7 +187,8 @@ def game_session(game_id):
                             number_of_colours=number_of_colours,
                             number_of_positions=number_of_positions,
                             doubles_allowed=doubles_allowed,
-                            cheat_modus=cheat_modus
+                            cheat_modus=cheat_modus,
+                            answer = answer
                             )
     
 
@@ -291,6 +293,16 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
         print('pin_id: {}, colour: {}, position: {}, game_id: {}'.format(pin.id, pin.colour, pin.position, pin.game_id))
 
     return temp_game.id
+
+
+def __get_answer(game_id):
+
+    all_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id)).scalars().all()
+    answer_pins = []
+    for pin in all_pins: # Slightly redundand but failsafe
+        if pin.position == 1 or pin.position == 2 or pin.position == 3 or pin.position == 4:
+            answer_pins.append(pin)
+    return answer_pins
 
 
 
