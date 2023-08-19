@@ -193,12 +193,14 @@ def game_session(game_id):
             temp_pin = Pin()
             temp_pin.colour = request.form['guess_position_{}'.format(counter)]
             temp_pin.position = counter
-            temp_pin.players_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one().id
+            player_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one().id
+            temp_pin.players_id = player_id
             temp_pin.game_id = game_id
             db.session.add(temp_pin)
             db.session.commit()
             counter += 1
         # al_guesses = __get_player_guesses(game_id, number_of_positions)
+        all_user_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id, players_id=player_id)).scalars().all()
         
 
         if (__is_game_won(answer, guess)):
