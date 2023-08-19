@@ -2,6 +2,7 @@ from flask import Flask, url_for, render_template, session, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 import re as regex
 from datetime import timedelta
+from datetime import datetime
 from enum import Enum
 from random import randrange
 
@@ -199,8 +200,24 @@ def __nickname_okay():
     return False
 
 
-def __generate_game(positions_length, amount_of_colours, can_be_double):
-    # code = []
+def __generate_game(positions_length, amount_of_colours, can_be_double, players_id):
+    
+    temp_game = Game()
+    temp_game.start_time = datetime.now()
+    temp_game.score = 0
+    temp_game.players_id = players_id
+    temp_game.status = 'active'
+    db.session.add(temp_game)
+    db.session.commit()
+
+    games = db.session.execute(db.select(Game)).scalars().all()
+    for game in games:
+        print('game_id: {}, start_time: {}, score: {}, players_id: {}, status: {}'.format(game.id, game.start_time, game.players_id, game.status))
+
+
+
+
+
     end_range = amount_of_colours + 1
     if(can_be_double):
         counter = 1
