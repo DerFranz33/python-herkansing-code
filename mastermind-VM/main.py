@@ -157,7 +157,7 @@ def game_session(game_id,
     elif(doubles_allowed == 'false' or doubles_allowed == 'False'):
         doubles_allowed = False
 
-    __generate_random_code(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed)
+    __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed)
 
     return render_template('game-session.html', nickname=nickname,
                             number_of_colours=number_of_colours,
@@ -199,23 +199,39 @@ def __nickname_okay():
     return False
 
 
-def __generate_random_code(positions_length, amount_of_colours, can_be_double):
-    code = []
+def __generate_game(positions_length, amount_of_colours, can_be_double):
+    # code = []
     end_range = amount_of_colours + 1
     if(can_be_double):
-        for counter in range(positions_length):
-            code.append(randrange(1,amount_of_colours))
+        counter = 1
+        while counter <= range(positions_length):       
+            # code.append(randrange(1,amount_of_colours))
+            temp_pin = Pin()
+            temp_pin.colour = randrange(1,amount_of_colours)
+            temp_pin.position = counter
+            temp_pin.game_id = 1 # TODO
+            db.session.add(temp_pin)
+            db.session.commit()
+            counter += counter
     else:
-        counter = 0
-        while(counter < positions_length):
-            num = randrange(1,amount_of_colours)
-            if(num not in code):
-                code.append(num)
+        temp_colours = []
+        counter = 1
+        while(counter <= positions_length):
+            colour = randrange(1,amount_of_colours)
+            if(colour not in temp_colours):
+                temp_colours.append(colour)
+                temp_pin = Pin()
+                temp_pin.colour = randrange(1,amount_of_colours)
+                temp_pin.position = counter
+                temp_pin.game_id = 1 # TODO
+                db.session.add(temp_pin)
+                db.session.commit()
                 counter += 1
      
 
-
-
+    pins = db.session.execute(db.select(Pin)).scalars().all()
+    for pin in pins:
+        print('pin_id: {}, colour: {}, position: {}, game_id: {}'.format(pin.id, pin.colour, pin.position, pin.game_id))
 
     pass
 
