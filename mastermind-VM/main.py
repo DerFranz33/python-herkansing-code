@@ -184,15 +184,17 @@ def game_session(game_id):
 
     if(request.method == 'POST'):
         # al_guesses = []
-        # guess = []
+        guess = []
         counter = 1
         while counter <= number_of_positions:
-            # guess.append(request.form['guess_position_{}'.format(counter)])
+            guess.append(request.form['guess_position_{}'.format(counter)])
             temp_pin = Pin()
             temp_pin.colour = request.form['guess_position_{}'.format(counter)]
             temp_pin.position = counter
             temp_pin.players_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one().id
             temp_pin.game_id = game_id
+            db.session.add(temp_pin)
+            db.session.commit()
             counter += 1
         al_guesses = __get_player_guesses(game_id, number_of_positions)
         
@@ -342,17 +344,20 @@ def __get_player_guesses(game_id, amount_of_positions):
     
 
     all_guesses = []
-    
-    outer_counter = 0
-    inner_counter = amount_of_positions
 
-    while outer_counter < (all_guesses/amount_of_positions):
+    pins_guessed = len(all_pins) - amount_of_positions
+    
+    outer_counter = 1
+
+    while outer_counter < (pins_guessed/amount_of_positions):
         temp_guess_pins = []
-        while inner_counter < len(all_pins): 
-            temp_guess_pins.append(all_pins[inner_counter])
+        inner_counter = 0
+        while inner_counter < amount_of_positions: 
+            temp_guess_pins.append(all_pins[inner_counter + (amount_of_positions*outer_counter)])
             inner_counter += 1
         all_guesses.append(temp_guess_pins)
+        outer_counter += 1
 
 
-    pass
+    return all_guesses
 # -------------------- ENDHELPERS --------------------------
