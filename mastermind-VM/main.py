@@ -113,6 +113,7 @@ def game():
             return redirect(url_for('home'))
         else:
             
+            # TODO POST in db nowhere else
             if(request.method == 'POST'):
                 _number_of_colours = request.form['number_of_colours']
                 _number_of_positions = request.form['number_of_positions']
@@ -138,7 +139,7 @@ def game():
 
 
 
-
+# TODO refactor: only use game_id and get rest of values out of db
 @app.route('/game/<game_id>/<number_of_colours>/<number_of_positions>/<doubles_allowed>/<cheat_modus>', methods=['POST', 'GET'])
 def game_session(game_id, 
                  number_of_colours,
@@ -146,6 +147,7 @@ def game_session(game_id,
                  doubles_allowed,
                  cheat_modus
                  ):
+    
 
     if __nickname_okay():
         nickname = session['nickname']
@@ -158,9 +160,10 @@ def game_session(game_id,
     elif(doubles_allowed == 'false' or doubles_allowed == 'False'):
         doubles_allowed = False
 
-    
+    # TODO this needs to be in Game route
     __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, players_name=session['nickname'])
 
+    # TODO only game_id and nickname here
     return render_template('game-session.html', nickname=nickname,
                             number_of_colours=number_of_colours,
                             number_of_positions=number_of_positions,
