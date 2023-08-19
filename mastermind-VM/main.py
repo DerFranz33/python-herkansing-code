@@ -31,6 +31,10 @@ class Game(db.Model):
     start_time = db.Column(db.DateTime)
     end_time = db.Column(db.DateTime)
     score  = db.Column(db.Integer)
+    amount_of_colours = db.Column(db.Integer)
+    amount_of_positions = db.Column(db.Integer)
+    doubles_allowed = db.Column(db.Boolean)
+    cheat_modus = db.Column(db.Boolean)
 #     # R -> speler
     players_id = db.Column(db.Integer, db.ForeignKey('players.id'), nullable=True)
 #     # A -> status
@@ -162,18 +166,20 @@ def game_session(game_id):
 
 
 
-    number_of_colours = int(number_of_colours)
-    number_of_positions = int(number_of_positions)
+    number_of_colours = game.amount_of_colours
+    number_of_positions = game.amount_of_positions
+    doubles_allowed = game.doubles_allowed
+    cheat_modus = game.cheat_modus
 
-    if(doubles_allowed == 'true' or doubles_allowed == 'True'):
-        doubles_allowed = True
-    elif(doubles_allowed == 'false' or doubles_allowed == 'False'):
-        doubles_allowed = False
+    # if(doubles_allowed == 'true' or doubles_allowed == 'True'):
+    #     doubles_allowed = True
+    # elif(doubles_allowed == 'false' or doubles_allowed == 'False'):
+    #     doubles_allowed = False
 
     # TODO this needs to be in Game route
-    __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, players_name=session['nickname'])
+    __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, cheat_modus=cheat_modus, players_name=session['nickname'])
 
-    # TODO only game_id and nickname here
+    
     return render_template('game-session.html', nickname=nickname,
                             number_of_colours=number_of_colours,
                             number_of_positions=number_of_positions,
@@ -231,14 +237,16 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
     temp_game = Game()
     temp_game.start_time = datetime.now()
     temp_game.score = 0
+    temp_game.amount_of_colours = amount_of_colours
+    temp_game.amount_of_positions = positions_length
     temp_game.players_id = players_id
     temp_game.status = 'active'
     db.session.add(temp_game)
     db.session.commit()
 
-    games = db.session.execute(db.select(Game)).scalars().all()
+    games = db.session.execute(db.select(Game)).scalars().all() # TODO use __str__ here somewhere or something
     for game in games:
-        print('game_id: {}, start_time: {}, score: {}, players_id: {}, status: {}'.format(game.id, game.start_time, game.score, game.players_id, game.status))
+        print('game_id: {}, start_time: {}, score: {}, players_id: {}, status: {}, colours: {}, positions: {}'.format(game.id, game.start_time, game.score, game.players_id, game.status, game.amount_of_colours, game.amount_of_positions))
 
 
     end_range_colours = amount_of_colours + 1
