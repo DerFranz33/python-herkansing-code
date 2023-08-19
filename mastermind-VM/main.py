@@ -38,7 +38,7 @@ class Game(db.Model):
 #     # R -> speler
     players_id = db.Column(db.Integer, db.ForeignKey('players.id'), nullable=True)
 #     # A -> status
-    status = db.Column(db.String(100))
+    is_won = db.Column(db.Boolean, nullable=True)
 
 class Players(db.Model):
     id = db.Column(db.Integer, primary_key=True)
