@@ -10,12 +10,16 @@
             {% if cheat_modus %}
                 <p>Cheat modus aan</p>
                 {% for pin in answer %}
-                    <p>{{pin.colour}}</p>
+                    <div class="col-sm">{{pin.colour}}</div>
                 {% endfor %}
             {% endif %}
-            {% for i in range(number_of_positions) %}
-            <div class="col-sm">ph {{i+1}}</div>
-            {% endfor %}  
+            {% if cheat_modus == false %}
+                <p>Cheat modus uit</p>
+                {% for i in range(number_of_positions) %}
+                <div class="col-sm">??{{i+1}}??</div>
+                {% endfor %}  
+            {% endif %}
+            
         </div>
         <!-- <div class="row"> -->
             <form class="row" action="" method="post">
