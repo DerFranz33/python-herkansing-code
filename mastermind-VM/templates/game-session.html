@@ -21,6 +21,15 @@
             {% endif %}
             
         </div>
+        {% if guesses|length %}
+            {% for guess in guesses %}
+                <div class="row">
+                    {% for pin in guess %}
+                    <div class="col-sm">{{pin.colour}}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}            
+        {% endif %}
         <!-- <div class="row"> -->
             <form class="row" action="" method="post">
                 {% for i in range(number_of_positions) %}

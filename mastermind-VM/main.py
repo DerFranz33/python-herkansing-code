@@ -183,11 +183,18 @@ def game_session(game_id):
     # __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, cheat_modus=cheat_modus, players_name=session['nickname'])
 
     if(request.method == 'POST'):
-        guess = []
+        # al_guesses = []
+        # guess = []
         counter = 1
         while counter <= number_of_positions:
-            guess.append(request.form['guess_position_{}'.format(counter)])
+            # guess.append(request.form['guess_position_{}'.format(counter)])
+            temp_pin = Pin()
+            temp_pin.colour = request.form['guess_position_{}'.format(counter)]
+            temp_pin.position = counter
+            temp_pin.players_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one().id
+            temp_pin.game_id = game_id
             counter += 1
+        al_guesses = __get_player_guesses(game_id, number_of_positions)
         
 
         if (__is_game_won(answer, guess)):
@@ -198,7 +205,7 @@ def game_session(game_id):
                             number_of_positions=number_of_positions,
                             doubles_allowed=doubles_allowed,
                             cheat_modus=cheat_modus,
-                            answer = answer
+                            answer = answer,
                             )
     
 
@@ -329,6 +336,23 @@ def __is_game_won(pin_answer, pin_guess):
            counter += 1
         return True
 
+def __get_player_guesses(game_id, amount_of_positions):
+    all_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id)).scalars().all()
+    
+    
+
+    all_guesses = []
+    
+    outer_counter = 0
+    inner_counter = amount_of_positions
+
+    while outer_counter < (all_guesses/amount_of_positions):
+        temp_guess_pins = []
+        while inner_counter < len(all_pins): 
+            temp_guess_pins.append(all_pins[inner_counter])
+            inner_counter += 1
+        all_guesses.append(temp_guess_pins)
 
 
+    pass
 # -------------------- ENDHELPERS --------------------------
