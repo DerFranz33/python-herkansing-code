@@ -252,7 +252,7 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
     end_range_colours = amount_of_colours + 1
     if(can_be_double):
         counter = 1
-        while counter <= range(positions_length):
+        while counter <= positions_length:
             temp_pin = Pin()
             temp_pin.colour = randrange(1,end_range_colours)
             temp_pin.position = counter
