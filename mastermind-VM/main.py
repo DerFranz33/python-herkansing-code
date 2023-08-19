@@ -173,6 +173,8 @@ def game_session(game_id):
     doubles_allowed = game.doubles_allowed
     cheat_modus = game.cheat_modus
     answer = __get_answer(game_id)
+    # al_guesses = __get_player_guesses(game_id, number_of_positions)
+
 
     # if(doubles_allowed == 'true' or doubles_allowed == 'True'):
     #     doubles_allowed = True
@@ -196,7 +198,7 @@ def game_session(game_id):
             db.session.add(temp_pin)
             db.session.commit()
             counter += 1
-        al_guesses = __get_player_guesses(game_id, number_of_positions)
+        # al_guesses = __get_player_guesses(game_id, number_of_positions)
         
 
         if (__is_game_won(answer, guess)):
@@ -207,7 +209,7 @@ def game_session(game_id):
                             number_of_positions=number_of_positions,
                             doubles_allowed=doubles_allowed,
                             cheat_modus=cheat_modus,
-                            answer = answer,
+                            answer = answer
                             )
     
 
@@ -338,26 +340,26 @@ def __is_game_won(pin_answer, pin_guess):
            counter += 1
         return True
 
-def __get_player_guesses(game_id, amount_of_positions):
-    all_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id)).scalars().all()
+# def __get_player_guesses(game_id, amount_of_positions):
+#     all_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id)).scalars().all()
     
     
 
-    all_guesses = []
+#     all_guesses = []
 
-    pins_guessed = len(all_pins) - amount_of_positions
+#     pins_guessed = len(all_pins) - amount_of_positions
     
-    outer_counter = 1
+#     outer_counter = 1
 
-    while outer_counter < (pins_guessed/amount_of_positions):
-        temp_guess_pins = []
-        inner_counter = 0
-        while inner_counter < amount_of_positions: 
-            temp_guess_pins.append(all_pins[inner_counter + (amount_of_positions*outer_counter)])
-            inner_counter += 1
-        all_guesses.append(temp_guess_pins)
-        outer_counter += 1
+#     while outer_counter < (pins_guessed/amount_of_positions):
+#         temp_guess_pins = []
+#         inner_counter = 0
+#         while inner_counter < amount_of_positions: 
+#             temp_guess_pins.append(all_pins[inner_counter + (amount_of_positions*outer_counter)])
+#             inner_counter += 1
+#         all_guesses.append(temp_guess_pins)
+#         outer_counter += 1
 
 
-    return all_guesses
+#     return all_guesses
 # -------------------- ENDHELPERS --------------------------
