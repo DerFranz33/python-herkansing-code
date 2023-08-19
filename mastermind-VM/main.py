@@ -177,7 +177,7 @@ def game_session(game_id):
     #     doubles_allowed = False
 
     # TODO this needs to be in Game route
-    __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, cheat_modus=cheat_modus, players_name=session['nickname'])
+    # __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, cheat_modus=cheat_modus, players_name=session['nickname'])
 
     
     return render_template('game-session.html', nickname=nickname,
