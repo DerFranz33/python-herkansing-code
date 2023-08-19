@@ -308,10 +308,14 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
 def __get_answer(game_id):
 
     all_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id)).scalars().all()
+    game = db.session.execute(db.select(Game).filter_by(id=game_id)).scalar_one_or_none()
+    amount_of_positions = game.amount_of_positions
+
     answer_pins = []
-    for pin in all_pins: # Slightly redundand but failsafe
-        if pin.position == 1 or pin.position == 2 or pin.position == 3 or pin.position == 4:
-            answer_pins.append(pin)
+    counter = 0
+    while counter < amount_of_positions:
+        answer_pins.append(all_pins[counter])
+        counter += 1
     return answer_pins
 
 
