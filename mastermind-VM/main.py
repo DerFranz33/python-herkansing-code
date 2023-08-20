@@ -202,10 +202,22 @@ def game_session(game_id):
         # al_guesses = __get_player_guesses(game_id, number_of_positions)
         all_user_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id, players_id=player_id)).scalars().all()
         amount_of_guesses = int(len(all_user_pins)/number_of_positions)
-        
 
         if (__is_game_won(answer, guess)):
-            print('TODO yeah game won!!!!')
+                    print('TODO yeah game won!!!!')
+
+        return render_template('game-session.html', nickname=nickname,
+                        number_of_colours=number_of_colours,
+                        number_of_positions=number_of_positions,
+                        doubles_allowed=doubles_allowed,
+                        cheat_modus=cheat_modus,
+                        answer = answer,
+                        amount_of_guesses=amount_of_guesses,
+                        all_user_pins=all_user_pins
+                        )
+        
+
+        
     
     return render_template('game-session.html', nickname=nickname,
                             number_of_colours=number_of_colours,

@@ -34,8 +34,8 @@
             {% if amount_of_guesses is defined %}
                 {% for count in range(amount_of_guesses) %}
                 <div class="row">
-                        {% for pin in range(count * amount_of_guesses, (count*amount_of_guesses)+amount_of_guesses) %}
-                        <div class="col-sm">{{pin.colour}}</div>
+                        {% for pin in range(count * amount_of_guesses, (count*amount_of_guesses)+number_of_positions) %}
+                        <div class="col-sm">{{all_user_pins[pin].colour}}</div>
                         {% endfor %}
                     </div>
                 {% endfor %}
