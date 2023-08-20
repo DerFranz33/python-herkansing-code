@@ -3,6 +3,6 @@
 {% block content %}
     <h1 class="text-bg-secondary">{{nickname}}</h1>
     {% for game in player_games %}
-        <p>{{game}}</p>
+        <a href="/game/{{game.id}}">{{game}}</a>
     {% endfor %}
 {% endblock %}
