@@ -42,6 +42,10 @@ class Game(db.Model):
 #     # A -> status
     is_won = db.Column(db.Boolean, nullable=True)
 
+    def __str__(self):
+        return "Game_id: {game_id}, start_time: {start_time}".format(game_id=self.id, start_time=self.start_time)
+
+
 class Players(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(100), unique=True)
@@ -282,6 +286,7 @@ def statistics():
         player_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one_or_none().id
         player_games = db.session.execute(db.select(Game).filter_by(players_id=player_id)).scalars().all()
 
+        print(player_games[0])
 
 
 
