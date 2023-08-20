@@ -3,6 +3,7 @@
 {% block content %}
     <h1 class="text-bg-info">{{nickname}}</h1> 
     <h2>{{player}}</h2>  
+    <p>zwart = 11, wit = 12, rest zijn kleur</p>
 
     <div class="container text-bg-info w-50">
         
@@ -21,7 +22,7 @@
             {% endif %}
             
         </div>
-        
+
             {% if amount_of_guesses is defined %}
                 {% for count in range(amount_of_guesses) %}
                 <div class="row">
