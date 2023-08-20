@@ -65,6 +65,8 @@ class Colour(Enum):
     PURPLE = 8
     PINK = 9
     OLIVE = 10
+    BLACK = 11
+    WHITE = 12
 
 
 
@@ -205,6 +207,8 @@ def game_session(game_id):
 
         if (__is_game_won(answer, guess)):
                     print('TODO yeah game won!!!!')
+        else:
+            __give_feedback(game_id, guess)
 
         return render_template('game-session.html', nickname=nickname,
                         number_of_colours=number_of_colours,
@@ -354,6 +358,30 @@ def __is_game_won(pin_answer, pin_guess):
                return False
            counter += 1
         return True
+
+
+
+def __give_feedback(game_id, guess):
+    feedback = []
+    answer = __get_answer(game_id=game_id)
+
+    counter = 0
+    while counter < len(guess):
+        if(answer[counter].colour == guess[counter].colour):
+            feedback.append(11) # TODO needs to be enum
+        else:
+            temp_list = [pin for pin in answer if pin.colour == guess[counter].colour]
+
+        
+
+    pass
+
+
+
+
+
+
+
 
 # def __get_player_guesses(game_id, amount_of_positions):
 #     all_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id)).scalars().all()
