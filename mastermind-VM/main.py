@@ -213,9 +213,11 @@ def game_session(game_id):
         # al_guesses = __get_player_guesses(game_id, number_of_positions)
         # TODO store in db get current game_id -> game.end_time = current time
         # TODO game.score = game.score +1
-
+        
         if (__is_game_won(answer, guess)):
-                    print('TODO yeah game won!!!!')
+                game.is_won = True
+                db.session.add(game)
+                db.session.commit()
         
 
     feedback_so_far = []
@@ -236,7 +238,8 @@ def game_session(game_id):
             answer = answer,
             amount_of_guesses=amount_of_guesses,
             all_user_pins=all_user_pins,
-            feedback=feedback
+            feedback=feedback,
+            is_won=game.is_won
             )
         
 
