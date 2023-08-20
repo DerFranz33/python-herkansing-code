@@ -31,6 +31,13 @@
             {% endfor %}            
         {% endif %} -->
         <!-- <div class="row"> -->
+            {% for count in range(amount_of_guesses) %}
+            <div class="row">
+                    {% for pin in range(count * amount_of_guesses, (count*amount_of_guesses)+amount_of_guesses) %}
+                    <div class="col-sm">{{pin.colour}}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
             <form class="row" action="" method="post">
                 {% for i in range(number_of_positions) %}
                 <input class="col-sm" type="number" value="1" min="1" max="{{number_of_colours}}" name=guess_position_{{i+1}}>
