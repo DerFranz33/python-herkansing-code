@@ -304,16 +304,10 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
     temp_game.amount_of_colours = amount_of_colours
     temp_game.amount_of_positions = positions_length
     temp_game.players_id = players_id
-    # temp_game.status = 'active' TODO remove
     temp_game.cheat_modus = cheat_modus
     db.session.add(temp_game)
     db.session.commit()
 
-    # games = db.session.execute(db.select(Game)).scalars().all() # TODO use __str__ here somewhere or something
-    # for game in games:
-    #     print('game_id: {}, start_time: {}, score: {}, players_id: {}, colours: {}, positions: {}, cheat_modus: {}, is_won: {}'
-    #           .format(game.id, game.start_time, game.score, game.players_id, game.amount_of_colours,
-    #                    game.amount_of_positions, game.cheat_modus, game.is_won))
 
 
     end_range_colours = amount_of_colours + 1
@@ -341,11 +335,6 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
                 db.session.add(temp_pin)
                 db.session.commit()
                 counter += 1
-     
-
-    # pins = db.session.execute(db.select(Pin)).scalars().all()
-    # for pin in pins:
-    #     print('pin_id: {}, colour: {}, position: {}, game_id: {}'.format(pin.id, pin.colour, pin.position, pin.game_id))
 
     return temp_game
 
@@ -373,7 +362,7 @@ def __is_game_won(pin_answer, pin_guess):
         return True
 
 
-# feedback_so_far = [] # TODO refactor if you can
+
 def __give_feedback(game_id, guess, feedback_sofar): # TODO instead of guess use all_user_pins
     feedback = []
     answer = __get_answer(game_id=game_id)
@@ -393,8 +382,6 @@ def __give_feedback(game_id, guess, feedback_sofar): # TODO instead of guess use
                 counter += 1
     if(len(feedback) > 0):
         feedback_sofar.append(feedback)
-        # feedback_so_far.append(feedback)
-    # return feedback_so_far # TODO probably not necessary
 
 
         
