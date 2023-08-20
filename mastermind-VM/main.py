@@ -12,9 +12,9 @@ db = SQLAlchemy()
 app = Flask(__name__)
 # configure the SQLite database, relative to the app instance folder
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
-# make sure session is cleaned very soon (TODO just for testing purposes)
+# make sure session is cleaned very soon
 # app.permanent_session_lifetime = timedelta(seconds=20)
-# set secret key which is needed for sqlalchemy to operate (TODO make it a difficult key)
+# set secret key which is needed for sqlalchemy to operate
 app.secret_key = 'ali'
 
 # initialize the app with the extension
@@ -24,8 +24,8 @@ feedback_so_far = []
 
 
 
-# ---------- CLASSES TODO remove here and put in a file called models.py -----------------------
-# TODO check if need nullables TODO rename Players to player
+# ---------- CLASSES  -----------------------
+
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -58,7 +58,7 @@ class Pin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     players_id = db.Column(db.Integer, db.ForeignKey('players.id'), nullable=True)
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=True)
-    colour = db.Column(db.String(20)) # TODO als lukt maak enum van
+    colour = db.Column(db.String(20)) 
     position = db.Column(db.Integer)
 
     
@@ -93,18 +93,12 @@ def home():
             db.session.add(temp_player)
             db.session.commit()
 
-        # ------------- TODO just testing purposes --------------
-        # _player = db.one_or_404(db.select(Players).filter_by(nickname='Henk'))
-        # return render_template('game.html', player=_player.nickname)
-        # -------------------------------------------------------
 
         return redirect(url_for('game'))
     else:
         if('nickname' in session):
             return redirect(url_for('game'))
         else:
-
-            # nicknames = ('test1', 'test2', 'test3')
             _players = db.session.execute(db.select(Players)).scalars().all()
             _nickames = []
             for player in _players:
@@ -120,7 +114,7 @@ def game():
             return redirect(url_for('home'))
         else:
             
-            # TODO POST in db nowhere else
+           
             if(request.method == 'POST'):
 
                 _number_of_colours = request.form['number_of_colours']
@@ -153,7 +147,7 @@ def game():
 
 
 
-# TODO refactor: only use game_id and get rest of values out of db
+
 @app.route('/game/<game_id>', methods=['POST', 'GET'])
 def game_session(game_id):
     
@@ -351,22 +345,22 @@ def __is_game_won(pin_answer, pin_guess):
 
 
 
-def __give_feedback(game_id, guess, feedback_sofar): # TODO instead of guess use all_user_pins
+def __give_feedback(game_id, guess, feedback_sofar): 
     feedback = []
     answer = __get_answer(game_id=game_id)
 
     counter = 0
     while counter < len(guess):
         if(answer[counter].colour == guess[counter].colour):
-            feedback.append(11) # TODO needs to be enum
+            feedback.append(11) 
             counter += 1
         else:
-            temp_list = [pin for pin in answer if pin.colour == guess[counter].colour] # TODO check if this is a good enough comprehension
+            temp_list = [pin for pin in answer if pin.colour == guess[counter].colour] 
             if(len(temp_list) > 0):
-                feedback.append(12) # TODO needs to be enum
+                feedback.append(12) 
                 counter += 1
             else:
-                feedback.append('')# TODO ugly?
+                feedback.append('')
                 counter += 1
     if(len(feedback) > 0):
         feedback_sofar.append(feedback)
