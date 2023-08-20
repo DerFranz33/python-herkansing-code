@@ -201,6 +201,7 @@ def game_session(game_id):
             counter += 1
         # al_guesses = __get_player_guesses(game_id, number_of_positions)
         all_user_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id, players_id=player_id)).scalars().all()
+        amount_of_guesses = int(len(all_user_pins)/number_of_positions)
         
 
         if (__is_game_won(answer, guess)):
