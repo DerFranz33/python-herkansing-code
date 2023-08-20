@@ -280,13 +280,14 @@ def reset_nickname():
 
 
 
-@app.route('/statistics')
+@app.route('/statistics/', methods=['POST', 'GET'])
 def statistics():
     if __nickname_okay():
         player_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one_or_none().id
         player_games = db.session.execute(db.select(Game).filter_by(players_id=player_id)).scalars().all()
 
-        # print(player_games[0])
+        if(request.method == 'POST'):
+            pass
 
 
 

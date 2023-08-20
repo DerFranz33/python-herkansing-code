@@ -2,13 +2,13 @@
 {% block title %}Statestieken{% endblock %}
 {% block content %}
     <h1 class="text-bg-secondary">{{nickname}}</h1>
-    <form action="#" method="post">
+    <form action="" method="post">
         {% for game in player_games %}
             <div class="row">
                 <label>{{game}}</label>
                 <input type="radio" name="game" value="{{game.id}}">
             </div>
         {% endfor %}
-        <input type="submit" value="Submit">
+        <input type="submit" value="submit">
     </form>
 {% endblock %}
