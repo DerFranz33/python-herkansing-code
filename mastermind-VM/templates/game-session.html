@@ -43,9 +43,11 @@
 
 
             {% if feedback is defined %}
+                <div class="row">
                     {% for i in range(feedback|length) %}
                         <div class="col-sm bg-warning">{{feedback[i]}}</div>
                     {% endfor %}
+                </div>                    
             {% endif %}
 
 
