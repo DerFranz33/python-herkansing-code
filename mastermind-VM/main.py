@@ -90,9 +90,14 @@ with app.app_context():
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
+    # session.pop('nickname')
+    
     if(request.method == 'POST'):
         nickname =  request.form['nickname']
         session['nickname'] = nickname
+        if(__nickname_okay() == False):
+            session.pop('nickname')
+            return redirect(url_for('home'))
         # Add player
         temp_player = Players()
         temp_player.nickname = nickname
@@ -257,6 +262,7 @@ def __nickname_okay():
         if regex.search('[a-zA-Z]', session['nickname']) != None:
             return True
     return False
+    
 
 
 def test_db_games_change_decorator(function):
