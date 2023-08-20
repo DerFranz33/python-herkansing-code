@@ -125,11 +125,12 @@ def game():
 
                 _number_of_colours = request.form['number_of_colours']
                 _number_of_positions = request.form['number_of_positions']
-                if(int(_number_of_colours) <= int(_number_of_positions)):
-                    return redirect(url_for('game'))
-
                 _doubles_allowed = request.form['doubles_allowed']
                 _cheat_modus = request.form['cheat_modus']
+                if(_doubles_allowed == 'false' or _doubles_allowed == 'False'):
+                    if(int(_number_of_colours) <= int(_number_of_positions)):
+                        return redirect(url_for('game'))
+
 
                 feedback_so_far = []
 
