@@ -2,9 +2,13 @@
 {% block title %}Statestieken{% endblock %}
 {% block content %}
     <h1 class="text-bg-secondary">{{nickname}}</h1>
-    {% for game in player_games %}
-        <div class="row">
-            <a href="/game/{{game.id}}">{{game}}</a>
-        </div>
-    {% endfor %}
+    <form action="#" method="post">
+        {% for game in player_games %}
+            <div class="row">
+                <label>{{game}}</label>
+                <input type="radio" name="game" value="{{game.id}}">
+                <!-- <a href="/game/{{game.id}}">{{game}}</a> -->
+            </div>
+            {% endfor %}
+    </form>
 {% endblock %}
