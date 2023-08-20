@@ -43,7 +43,7 @@ class Game(db.Model):
     is_won = db.Column(db.Boolean, nullable=True)
 
     def __str__(self):
-        return "Game_id: {game_id}, start_time: {start_time}".format(game_id=self.id, start_time=self.start_time)
+        return "Game_id: {game_id}, start_time: {start_time}, end_time:{end_time}".format(game_id=self.id, start_time=self.start_time, end_time=self.end_time)
 
 
 class Players(db.Model):
@@ -214,6 +214,7 @@ def game_session(game_id):
         # TODO store in db get current game_id -> game.end_time = current time
         # TODO game.score = game.score +1
         game.score = game.score + 1
+        game.end_time = datetime.now()
         if (__is_game_won(answer, guess)):
                 game.is_won = True
                 db.session.add(game)
