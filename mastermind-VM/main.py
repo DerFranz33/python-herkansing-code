@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 import re as regex
 from datetime import timedelta
 from datetime import datetime
-from enum import Enum
 from random import randrange
 
 
