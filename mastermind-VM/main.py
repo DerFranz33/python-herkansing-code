@@ -42,6 +42,10 @@ class Game(db.Model):
 #     # A -> status
     is_won = db.Column(db.Boolean, nullable=True)
 
+    def __str__(self):
+        return "Game_id: {game_id}, start_time: {start_time}".format(game_id=self.id, start_time=self.start_time)
+
+
 class Players(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(100), unique=True)
@@ -191,63 +195,54 @@ def game_session(game_id):
     # TODO this needs to be in Game route
     # __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, cheat_modus=cheat_modus, players_name=session['nickname'])
 
+    guess = []
+    player_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one().id
     if(request.method == 'POST'):
         # al_guesses = []
-        guess = []
         counter = 1
         while counter <= number_of_positions:
             guess.append(request.form['guess_position_{}'.format(counter)])
             temp_pin = Pin()
             temp_pin.colour = request.form['guess_position_{}'.format(counter)]
             temp_pin.position = counter
-            player_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one().id
             temp_pin.players_id = player_id
             temp_pin.game_id = game_id
             db.session.add(temp_pin)
             db.session.commit()
             counter += 1
         # al_guesses = __get_player_guesses(game_id, number_of_positions)
-        all_user_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id, players_id=player_id)).scalars().all()
-        amount_of_guesses = int(len(all_user_pins)/number_of_positions)
         # TODO store in db get current game_id -> game.end_time = current time
         # TODO game.score = game.score +1
-
+        
         if (__is_game_won(answer, guess)):
-                    print('TODO yeah game won!!!!')
-        else:
-            feedback = __give_feedback(game_id, guess)
-            return render_template('game-session.html', nickname=nickname,
-                    number_of_colours=number_of_colours,
-                    number_of_positions=number_of_positions,
-                    doubles_allowed=doubles_allowed,
-                    cheat_modus=cheat_modus,
-                    answer = answer,
-                    amount_of_guesses=amount_of_guesses,
-                    all_user_pins=all_user_pins,
-                    feedback=feedback
-                    )
-
-
-        return render_template('game-session.html', nickname=nickname,
-                        number_of_colours=number_of_colours,
-                        number_of_positions=number_of_positions,
-                        doubles_allowed=doubles_allowed,
-                        cheat_modus=cheat_modus,
-                        answer = answer,
-                        amount_of_guesses=amount_of_guesses,
-                        all_user_pins=all_user_pins
-                        )
+                game.is_won = True
+                db.session.add(game)
+                db.session.commit()
         
 
-        
-    
+    feedback_so_far = []
+    all_user_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id, players_id=player_id)).scalars().all()
+    amount_of_guesses = int(len(all_user_pins)/number_of_positions)
+
+    feedback = []
+    for row in range(amount_of_guesses):
+        # for pin in range(row * amount_of_guesses, (row*amount_of_guesses)+amount_of_guesses):            
+        feedback = __give_feedback(game_id, all_user_pins[row * number_of_positions : (row * number_of_positions) + number_of_positions])
+
+
     return render_template('game-session.html', nickname=nickname,
-                            number_of_colours=number_of_colours,
-                            number_of_positions=number_of_positions,
-                            doubles_allowed=doubles_allowed,
-                            cheat_modus=cheat_modus,
-                            answer = answer
-                            )
+            number_of_colours=number_of_colours,
+            number_of_positions=number_of_positions,
+            doubles_allowed=doubles_allowed,
+            cheat_modus=cheat_modus,
+            answer = answer,
+            amount_of_guesses=amount_of_guesses,
+            all_user_pins=all_user_pins,
+            feedback=feedback,
+            is_won=game.is_won
+            )
+        
+
     
 
 
@@ -263,11 +258,52 @@ def reset_nickname():
     session.pop('nickname', None)
     return redirect(url_for('home'))
 
-@app.route('/statistics')
+
+
+
+
+
+
+
+
+
+
+
+
+
+@app.route('/statistics/', methods=['POST', 'GET'])
 def statistics():
     if __nickname_okay():
-        return render_template('statistics.html', nickname=session['nickname'])
+        player_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one_or_none().id
+        player_games = db.session.execute(db.select(Game).filter_by(players_id=player_id)).scalars().all()
+
+        if(request.method == 'POST'):
+            game_id = request.form['game_id']
+            return redirect(url_for('game_session', game_id=game_id))
+
+
+
+
+
+
+
+        return render_template('statistics.html', nickname=session['nickname'], player_games=player_games)
     return redirect(url_for('home'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -385,19 +421,19 @@ def __give_feedback(game_id, guess): # TODO instead of guess use all_user_pins
 
     counter = 0
     while counter < len(guess):
-        if(answer[counter].colour == guess[counter]):
+        if(answer[counter].colour == guess[counter].colour):
             feedback.append(11) # TODO needs to be enum
             counter += 1
         else:
-            temp_list = [pin for pin in answer if pin.colour == guess[counter]] # TODO check if this is a good enough comprehension
+            temp_list = [pin for pin in answer if pin.colour == guess[counter].colour] # TODO check if this is a good enough comprehension
             if(len(temp_list) > 0):
                 feedback.append(12) # TODO needs to be enum
                 counter += 1
             else:
                 feedback.append('')# TODO ugly?
                 counter += 1
-            
-    feedback_so_far.append(feedback)
+    if(len(feedback) > 0):
+        feedback_so_far.append(feedback)
     return feedback_so_far # TODO probably not necessary
 
 
