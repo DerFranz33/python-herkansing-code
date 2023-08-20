@@ -10,7 +10,7 @@
             {% if cheat_modus %}
                 <p>Cheat modus aan</p>
                 {% for pin in answer %}
-                    <div class="col-sm">{{pin.colour}}</div>
+                    <div class="col-sm bg-success">{{pin.colour}}</div>
                 {% endfor %}
             {% endif %}
             {% if cheat_modus == false %}
@@ -38,8 +38,27 @@
                         <div class="col-sm">{{all_user_pins[pin].colour}}</div>
                         {% endfor %}
                     </div>
+                    <!-- TODO: feedback needs to be here - feedback should be a list of  -->
+                    {% if feedback is defined %}
+                    <div class="row">
+                        {% for i in range(feedback[count]|length) %}
+                            <div class="col-sm bg-warning">{{feedback[count][i]}}</div>
+                        {% endfor %}
+                    </div>     
+                    {% endif %}
                 {% endfor %}
             {% endif %}
+
+
+            <!-- {% if feedback is defined %}
+                <div class="row">
+                    {% for i in range(feedback|length) %}
+                        <div class="col-sm bg-warning">{{feedback[i]}}</div>
+                    {% endfor %}
+                </div>                    
+            {% endif %} -->
+
+
             
             <form class="row" action="" method="post">
                 {% for i in range(number_of_positions) %}

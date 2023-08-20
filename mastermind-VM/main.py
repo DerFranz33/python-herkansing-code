@@ -21,6 +21,8 @@ app.secret_key = 'ali'
 # initialize the app with the extension
 db.init_app(app)
 
+feedback_so_far = []
+
 
 
 # ---------- CLASSES TODO remove here and put in a file called models.py -----------------------
@@ -65,6 +67,8 @@ class Colour(Enum):
     PURPLE = 8
     PINK = 9
     OLIVE = 10
+    BLACK = 11
+    WHITE = 12
 
 
 
@@ -123,6 +127,9 @@ def game():
                 _number_of_positions = request.form['number_of_positions']
                 _doubles_allowed = request.form['doubles_allowed']
                 _cheat_modus = request.form['cheat_modus']
+
+                feedback_so_far = []
+
                 
                 
 
@@ -202,9 +209,24 @@ def game_session(game_id):
         # al_guesses = __get_player_guesses(game_id, number_of_positions)
         all_user_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id, players_id=player_id)).scalars().all()
         amount_of_guesses = int(len(all_user_pins)/number_of_positions)
+        # TODO store in db get current game_id -> game.end_time = current time
+        # TODO game.score = game.score +1
 
         if (__is_game_won(answer, guess)):
                     print('TODO yeah game won!!!!')
+        else:
+            feedback = __give_feedback(game_id, guess)
+            return render_template('game-session.html', nickname=nickname,
+                    number_of_colours=number_of_colours,
+                    number_of_positions=number_of_positions,
+                    doubles_allowed=doubles_allowed,
+                    cheat_modus=cheat_modus,
+                    answer = answer,
+                    amount_of_guesses=amount_of_guesses,
+                    all_user_pins=all_user_pins,
+                    feedback=feedback
+                    )
+
 
         return render_template('game-session.html', nickname=nickname,
                         number_of_colours=number_of_colours,
@@ -354,6 +376,36 @@ def __is_game_won(pin_answer, pin_guess):
                return False
            counter += 1
         return True
+
+
+feedback_so_far = [] # TODO refactor if you can
+def __give_feedback(game_id, guess): # TODO instead of guess use all_user_pins
+    feedback = []
+    answer = __get_answer(game_id=game_id)
+
+    counter = 0
+    while counter < len(guess):
+        if(answer[counter].colour == guess[counter]):
+            feedback.append(11) # TODO needs to be enum
+            counter += 1
+        else:
+            temp_list = [pin for pin in answer if pin.colour == guess[counter]] # TODO check if this is a good enough comprehension
+            if(len(temp_list) > 0):
+                feedback.append(12) # TODO needs to be enum
+                counter += 1
+            else:
+                feedback.append('')# TODO ugly?
+                counter += 1
+            
+    feedback_so_far.append(feedback)
+    return feedback_so_far # TODO probably not necessary
+
+
+
+
+
+
+
 
 # def __get_player_guesses(game_id, amount_of_positions):
 #     all_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id)).scalars().all()
