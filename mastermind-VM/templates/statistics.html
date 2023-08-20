@@ -2,4 +2,7 @@
 {% block title %}Statestieken{% endblock %}
 {% block content %}
     <h1 class="text-bg-secondary">{{nickname}}</h1>
+    {% for game in player_games %}
+        <p>{{game}}</p>
+    {% endfor %}
 {% endblock %}

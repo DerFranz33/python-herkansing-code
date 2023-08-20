@@ -286,14 +286,14 @@ def statistics():
         player_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one_or_none().id
         player_games = db.session.execute(db.select(Game).filter_by(players_id=player_id)).scalars().all()
 
-        print(player_games[0])
+        # print(player_games[0])
 
 
 
 
 
 
-        return render_template('statistics.html', nickname=session['nickname'])
+        return render_template('statistics.html', nickname=session['nickname'], player_games=player_games)
     return redirect(url_for('home'))
 
 
