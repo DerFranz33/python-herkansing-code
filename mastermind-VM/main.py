@@ -130,8 +130,12 @@ def game():
             
             # TODO POST in db nowhere else
             if(request.method == 'POST'):
+
                 _number_of_colours = request.form['number_of_colours']
                 _number_of_positions = request.form['number_of_positions']
+                if(_number_of_colours > _number_of_positions):
+                    return redirect(url_for('game'))
+
                 _doubles_allowed = request.form['doubles_allowed']
                 _cheat_modus = request.form['cheat_modus']
 
