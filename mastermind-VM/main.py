@@ -367,14 +367,20 @@ def __give_feedback(game_id, guess):
 
     counter = 0
     while counter < len(guess):
-        if(answer[counter].colour == guess[counter].colour):
+        if(answer[counter].colour == guess[counter]):
             feedback.append(11) # TODO needs to be enum
+            counter += 1
         else:
-            temp_list = [pin for pin in answer if pin.colour == guess[counter].colour]
+            temp_list = [pin for pin in answer if pin.colour == guess[counter]] # TODO check if this is a good enough comprehension
+            if(len(temp_list) > 0):
+                feedback.append(12) # TODO needs to be enum
+                counter += 1
+            else:
+                feedback.append('')# TODO ugly?
+                counter += 1
+            
 
-        
-
-    pass
+    return feedback
 
 
 
