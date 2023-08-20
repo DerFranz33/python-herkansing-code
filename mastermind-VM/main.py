@@ -173,6 +173,8 @@ def game_session(game_id):
     doubles_allowed = game.doubles_allowed
     cheat_modus = game.cheat_modus
     answer = __get_answer(game_id)
+    # al_guesses = __get_player_guesses(game_id, number_of_positions)
+
 
     # if(doubles_allowed == 'true' or doubles_allowed == 'True'):
     #     doubles_allowed = True
@@ -183,15 +185,39 @@ def game_session(game_id):
     # __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, cheat_modus=cheat_modus, players_name=session['nickname'])
 
     if(request.method == 'POST'):
+        # al_guesses = []
         guess = []
         counter = 1
         while counter <= number_of_positions:
             guess.append(request.form['guess_position_{}'.format(counter)])
+            temp_pin = Pin()
+            temp_pin.colour = request.form['guess_position_{}'.format(counter)]
+            temp_pin.position = counter
+            player_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one().id
+            temp_pin.players_id = player_id
+            temp_pin.game_id = game_id
+            db.session.add(temp_pin)
+            db.session.commit()
             counter += 1
-        
+        # al_guesses = __get_player_guesses(game_id, number_of_positions)
+        all_user_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id, players_id=player_id)).scalars().all()
+        amount_of_guesses = int(len(all_user_pins)/number_of_positions)
 
         if (__is_game_won(answer, guess)):
-            print('TODO yeah game won!!!!')
+                    print('TODO yeah game won!!!!')
+
+        return render_template('game-session.html', nickname=nickname,
+                        number_of_colours=number_of_colours,
+                        number_of_positions=number_of_positions,
+                        doubles_allowed=doubles_allowed,
+                        cheat_modus=cheat_modus,
+                        answer = answer,
+                        amount_of_guesses=amount_of_guesses,
+                        all_user_pins=all_user_pins
+                        )
+        
+
+        
     
     return render_template('game-session.html', nickname=nickname,
                             number_of_colours=number_of_colours,
@@ -281,7 +307,7 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
             temp_pin.game_id = temp_game.id
             db.session.add(temp_pin)
             db.session.commit()
-            counter += counter
+            counter += 1
     else:
         temp_colours = []
         counter = 1
@@ -329,6 +355,26 @@ def __is_game_won(pin_answer, pin_guess):
            counter += 1
         return True
 
+# def __get_player_guesses(game_id, amount_of_positions):
+#     all_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id)).scalars().all()
+    
+    
+
+#     all_guesses = []
+
+#     pins_guessed = len(all_pins) - amount_of_positions
+    
+#     outer_counter = 1
+
+#     while outer_counter < (pins_guessed/amount_of_positions):
+#         temp_guess_pins = []
+#         inner_counter = 0
+#         while inner_counter < amount_of_positions: 
+#             temp_guess_pins.append(all_pins[inner_counter + (amount_of_positions*outer_counter)])
+#             inner_counter += 1
+#         all_guesses.append(temp_guess_pins)
+#         outer_counter += 1
 
 
+#     return all_guesses
 # -------------------- ENDHELPERS --------------------------
