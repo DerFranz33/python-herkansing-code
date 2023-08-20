@@ -337,11 +337,11 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
     db.session.add(temp_game)
     db.session.commit()
 
-    games = db.session.execute(db.select(Game)).scalars().all() # TODO use __str__ here somewhere or something
-    for game in games:
-        print('game_id: {}, start_time: {}, score: {}, players_id: {}, colours: {}, positions: {}, cheat_modus: {}, is_won: {}'
-              .format(game.id, game.start_time, game.score, game.players_id, game.amount_of_colours,
-                       game.amount_of_positions, game.cheat_modus, game.is_won))
+    # games = db.session.execute(db.select(Game)).scalars().all() # TODO use __str__ here somewhere or something
+    # for game in games:
+    #     print('game_id: {}, start_time: {}, score: {}, players_id: {}, colours: {}, positions: {}, cheat_modus: {}, is_won: {}'
+    #           .format(game.id, game.start_time, game.score, game.players_id, game.amount_of_colours,
+    #                    game.amount_of_positions, game.cheat_modus, game.is_won))
 
 
     end_range_colours = amount_of_colours + 1
