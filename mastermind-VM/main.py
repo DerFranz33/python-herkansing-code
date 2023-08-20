@@ -307,7 +307,7 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
             temp_pin.game_id = temp_game.id
             db.session.add(temp_pin)
             db.session.commit()
-            counter += counter
+            counter += 1
     else:
         temp_colours = []
         counter = 1
