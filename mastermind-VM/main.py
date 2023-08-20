@@ -43,7 +43,7 @@ class Game(db.Model):
     is_won = db.Column(db.Boolean, nullable=True)
 
     def __str__(self):
-        return "Game_id: {game_id}, start_time: {start_time}, end_time:{end_time}".format(game_id=self.id, start_time=self.start_time, end_time=self.end_time)
+        return "Game_id: {game_id}, time_played: {duration}, score: {score}".format(game_id=self.id, duration=(self.end_time-self.start_time), score=self.score)
 
 
 class Players(db.Model):
@@ -214,6 +214,8 @@ def game_session(game_id):
         # TODO store in db get current game_id -> game.end_time = current time
         # TODO game.score = game.score +1
         game.score = game.score + 1
+        game.verified = True
+        db.session.commit()
         game.end_time = datetime.now()
         if (__is_game_won(answer, guess)):
                 game.is_won = True
@@ -408,8 +410,8 @@ def __get_answer(game_id):
 def __is_game_won(pin_answer, pin_guess):
         counter = 0
         while counter < len(pin_answer):
-           a = pin_answer[counter].colour
-           b = pin_guess[counter]
+        #    a = pin_answer[counter].colour
+        #    b = pin_guess[counter]
            if (pin_answer[counter].colour != pin_guess[counter]):
                return False
            counter += 1
