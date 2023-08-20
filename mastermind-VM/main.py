@@ -287,7 +287,9 @@ def statistics():
         player_games = db.session.execute(db.select(Game).filter_by(players_id=player_id)).scalars().all()
 
         if(request.method == 'POST'):
-            pass
+            game_id = request.form['game_id']
+            return redirect(url_for('game_session', game_id=game_id))
+
 
 
 

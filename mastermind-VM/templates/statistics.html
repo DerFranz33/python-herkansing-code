@@ -6,7 +6,7 @@
         {% for game in player_games %}
             <div class="row">
                 <label>{{game}}</label>
-                <input type="radio" name="game" value="{{game.id}}">
+                <input type="radio" name="game_id" value="{{game.id}}">
             </div>
         {% endfor %}
         <input type="submit" value="submit">
