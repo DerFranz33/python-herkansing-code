@@ -135,11 +135,11 @@ def game():
                 feedback_so_far = []
 
  
-                game_id = __generate_game(positions_length=_number_of_positions,
+                game_id = test_db_games_change_decorator(__generate_game(positions_length=_number_of_positions,
                                 amount_of_colours=_number_of_colours,
                                 can_be_double=_doubles_allowed,
                                 cheat_modus=_cheat_modus,
-                                players_name=session['nickname'])
+                                players_name=session['nickname']))  
 
 
                 return redirect(url_for('game_session', game_id=game_id))
@@ -250,6 +250,19 @@ def __nickname_okay():
     return False
 
 
+def test_db_games_change_decorator(function):
+    def wrapper(*args, **kwargs):
+       games = db.session.execute(db.select(Game)).scalars().all()
+       for game in games:
+           print(game)
+       function(*args, **kwargs)
+       games = db.session.execute(db.select(Game)).scalars().all()
+       for game in games:
+           print(game)
+    return wrapper
+
+
+@test_db_games_change_decorator
 def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_modus, players_name):
 
     positions_length = int(positions_length)
@@ -270,6 +283,7 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
 
     temp_game = Game()
     temp_game.start_time = datetime.now()
+    temp_game.end_time = datetime.now()
     temp_game.score = 0
     temp_game.amount_of_colours = amount_of_colours
     temp_game.amount_of_positions = positions_length
@@ -313,9 +327,9 @@ def __generate_game(positions_length, amount_of_colours, can_be_double, cheat_mo
                 counter += 1
      
 
-    pins = db.session.execute(db.select(Pin)).scalars().all()
-    for pin in pins:
-        print('pin_id: {}, colour: {}, position: {}, game_id: {}'.format(pin.id, pin.colour, pin.position, pin.game_id))
+    # pins = db.session.execute(db.select(Pin)).scalars().all()
+    # for pin in pins:
+    #     print('pin_id: {}, colour: {}, position: {}, game_id: {}'.format(pin.id, pin.colour, pin.position, pin.game_id))
 
     return temp_game.id
 
@@ -366,5 +380,6 @@ def __give_feedback(game_id, guess): # TODO instead of guess use all_user_pins
     return feedback_so_far # TODO probably not necessary
 
 
+        
 
 # -------------------- ENDHELPERS --------------------------
