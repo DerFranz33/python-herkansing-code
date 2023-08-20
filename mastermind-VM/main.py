@@ -63,19 +63,7 @@ class Pin(db.Model):
     position = db.Column(db.Integer)
 
     
-class Colour(Enum):
-    RED = 1
-    BLUE = 2
-    GREEN = 3
-    YELLOW = 4
-    ORANGE = 5
-    BROWN = 6
-    TURQUOISE = 7
-    PURPLE = 8
-    PINK = 9
-    OLIVE = 10
-    BLACK = 11
-    WHITE = 12
+
 
 
 
