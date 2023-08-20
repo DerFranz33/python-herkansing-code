@@ -263,11 +263,48 @@ def reset_nickname():
     session.pop('nickname', None)
     return redirect(url_for('home'))
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/statistics')
 def statistics():
     if __nickname_okay():
+        player_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one_or_none().id
+        player_games = db.session.execute(db.select(Game).filter_by(players_id=player_id)).scalars().all()
+
+
+
+
+
+
+
         return render_template('statistics.html', nickname=session['nickname'])
     return redirect(url_for('home'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
