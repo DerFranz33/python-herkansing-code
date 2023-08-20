@@ -217,10 +217,15 @@ def game_session(game_id):
         if (__is_game_won(answer, guess)):
                     print('TODO yeah game won!!!!')
         
-        
-    feedback = __give_feedback(game_id, guess)    
+
+    feedback_so_far = []
     all_user_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id, players_id=player_id)).scalars().all()
     amount_of_guesses = int(len(all_user_pins)/number_of_positions)
+
+    feedback = []
+    for row in range(amount_of_guesses):
+        # for pin in range(row * amount_of_guesses, (row*amount_of_guesses)+amount_of_guesses):            
+        feedback = __give_feedback(game_id, all_user_pins[row * number_of_positions : (row * number_of_positions) + number_of_positions])
 
 
     return render_template('game-session.html', nickname=nickname,
@@ -413,11 +418,11 @@ def __give_feedback(game_id, guess): # TODO instead of guess use all_user_pins
 
     counter = 0
     while counter < len(guess):
-        if(answer[counter].colour == guess[counter]):
+        if(answer[counter].colour == guess[counter].colour):
             feedback.append(11) # TODO needs to be enum
             counter += 1
         else:
-            temp_list = [pin for pin in answer if pin.colour == guess[counter]] # TODO check if this is a good enough comprehension
+            temp_list = [pin for pin in answer if pin.colour == guess[counter].colour] # TODO check if this is a good enough comprehension
             if(len(temp_list) > 0):
                 feedback.append(12) # TODO needs to be enum
                 counter += 1
