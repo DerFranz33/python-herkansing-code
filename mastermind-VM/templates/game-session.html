@@ -41,7 +41,7 @@
                     <!-- TODO: feedback needs to be here - feedback should be a list of  -->
                     {% if feedback is defined %}
                     <div class="row">
-                        {% for i in range(feedback|length) %}
+                        {% for i in range(feedback[count]|length) %}
                             <div class="col-sm bg-warning">{{feedback[count][i]}}</div>
                         {% endfor %}
                     </div>     
