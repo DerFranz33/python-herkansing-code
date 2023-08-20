@@ -125,6 +125,9 @@ def game():
                 _number_of_positions = request.form['number_of_positions']
                 _doubles_allowed = request.form['doubles_allowed']
                 _cheat_modus = request.form['cheat_modus']
+
+                # TODO feedback_so_far = []
+
                 
                 
 
@@ -371,8 +374,8 @@ def __is_game_won(pin_answer, pin_guess):
         return True
 
 
-
-def __give_feedback(game_id, guess):
+# TODO feedback_so_far = []
+def __give_feedback(game_id, guess): # TODO instead of guess use all_user_pins
     feedback = []
     answer = __get_answer(game_id=game_id)
 
@@ -390,8 +393,8 @@ def __give_feedback(game_id, guess):
                 feedback.append('')# TODO ugly?
                 counter += 1
             
-
-    return feedback
+    # TODO feedback_so_far.append(feedback[])
+    return feedback # TODO probably not necessary
 
 
 
