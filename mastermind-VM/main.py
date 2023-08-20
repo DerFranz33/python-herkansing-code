@@ -205,7 +205,7 @@ def game_session(game_id):
 
     feedback = []
     for row in range(amount_of_guesses):            
-        feedback = __give_feedback(game_id, all_user_pins[row * number_of_positions : (row * number_of_positions) + number_of_positions])
+        __give_feedback(game_id, all_user_pins[row * number_of_positions : (row * number_of_positions) + number_of_positions], feedback_so_far)
 
 
     return render_template('game-session.html', nickname=nickname,
@@ -216,7 +216,7 @@ def game_session(game_id):
             answer = answer,
             amount_of_guesses=amount_of_guesses,
             all_user_pins=all_user_pins,
-            feedback=feedback,
+            feedback=feedback_so_far,
             is_won=game.is_won,
             game=game
             )
@@ -363,8 +363,8 @@ def __is_game_won(pin_answer, pin_guess):
         return True
 
 
-feedback_so_far = [] # TODO refactor if you can
-def __give_feedback(game_id, guess): # TODO instead of guess use all_user_pins
+# feedback_so_far = [] # TODO refactor if you can
+def __give_feedback(game_id, guess, feedback_sofar): # TODO instead of guess use all_user_pins
     feedback = []
     answer = __get_answer(game_id=game_id)
 
@@ -382,8 +382,9 @@ def __give_feedback(game_id, guess): # TODO instead of guess use all_user_pins
                 feedback.append('')# TODO ugly?
                 counter += 1
     if(len(feedback) > 0):
-        feedback_so_far.append(feedback)
-    return feedback_so_far # TODO probably not necessary
+        feedback_sofar.append(feedback)
+        # feedback_so_far.append(feedback)
+    # return feedback_so_far # TODO probably not necessary
 
 
         
