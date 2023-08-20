@@ -21,16 +21,7 @@
             {% endif %}
             
         </div>
-        <!-- {% if guesses|length %}
-            {% for guess in guesses %}
-                <div class="row">
-                    {% for pin in guess %}
-                    <div class="col-sm">{{pin.colour}}</div>
-                    {% endfor %}
-                </div>
-            {% endfor %}            
-        {% endif %} -->
-        <!-- <div class="row"> -->
+        
             {% if amount_of_guesses is defined %}
                 {% for count in range(amount_of_guesses) %}
                 <div class="row">
@@ -50,14 +41,6 @@
             {% endif %}
 
 
-            <!-- {% if feedback is defined %}
-                <div class="row">
-                    {% for i in range(feedback|length) %}
-                        <div class="col-sm bg-warning">{{feedback[i]}}</div>
-                    {% endfor %}
-                </div>                    
-            {% endif %} -->
-
             {% if is_won is defined %}
                 {% if is_won %}
                 <p>YOU WON!</p>
@@ -71,9 +54,6 @@
                     </form>
                 {% endif %}
             {% endif %}
-            
-            
-        <!-- </div> -->
     </div>
 
 {% endblock %}
