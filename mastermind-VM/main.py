@@ -213,7 +213,7 @@ def game_session(game_id):
         # al_guesses = __get_player_guesses(game_id, number_of_positions)
         # TODO store in db get current game_id -> game.end_time = current time
         # TODO game.score = game.score +1
-        
+        game.score = game.score + 1
         if (__is_game_won(answer, guess)):
                 game.is_won = True
                 db.session.add(game)
@@ -239,7 +239,8 @@ def game_session(game_id):
             amount_of_guesses=amount_of_guesses,
             all_user_pins=all_user_pins,
             feedback=feedback,
-            is_won=game.is_won
+            is_won=game.is_won,
+            game=game
             )
         
 

@@ -60,7 +60,7 @@
 
             {% if is_won is defined %}
                 {% if is_won %}
-                <p>Readonly</p>
+                <p>{{game}}</p>
                 {% else %}
                     <form class="row" action="" method="post">
                     {% for i in range(number_of_positions) %}
