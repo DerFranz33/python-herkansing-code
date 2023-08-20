@@ -195,63 +195,46 @@ def game_session(game_id):
     # TODO this needs to be in Game route
     # __generate_game(amount_of_colours=number_of_colours, positions_length=number_of_positions, can_be_double=doubles_allowed, cheat_modus=cheat_modus, players_name=session['nickname'])
 
+    guess = []
+    player_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one().id
     if(request.method == 'POST'):
         # al_guesses = []
-        guess = []
         counter = 1
         while counter <= number_of_positions:
             guess.append(request.form['guess_position_{}'.format(counter)])
             temp_pin = Pin()
             temp_pin.colour = request.form['guess_position_{}'.format(counter)]
             temp_pin.position = counter
-            player_id = db.session.execute(db.select(Players).filter_by(nickname=session['nickname'])).scalar_one().id
             temp_pin.players_id = player_id
             temp_pin.game_id = game_id
             db.session.add(temp_pin)
             db.session.commit()
             counter += 1
         # al_guesses = __get_player_guesses(game_id, number_of_positions)
-        all_user_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id, players_id=player_id)).scalars().all()
-        amount_of_guesses = int(len(all_user_pins)/number_of_positions)
         # TODO store in db get current game_id -> game.end_time = current time
         # TODO game.score = game.score +1
 
         if (__is_game_won(answer, guess)):
                     print('TODO yeah game won!!!!')
-        else:
-            feedback = __give_feedback(game_id, guess)
-            return render_template('game-session.html', nickname=nickname,
-                    number_of_colours=number_of_colours,
-                    number_of_positions=number_of_positions,
-                    doubles_allowed=doubles_allowed,
-                    cheat_modus=cheat_modus,
-                    answer = answer,
-                    amount_of_guesses=amount_of_guesses,
-                    all_user_pins=all_user_pins,
-                    feedback=feedback
-                    )
-
-
-        return render_template('game-session.html', nickname=nickname,
-                        number_of_colours=number_of_colours,
-                        number_of_positions=number_of_positions,
-                        doubles_allowed=doubles_allowed,
-                        cheat_modus=cheat_modus,
-                        answer = answer,
-                        amount_of_guesses=amount_of_guesses,
-                        all_user_pins=all_user_pins
-                        )
         
-
         
-    
+    feedback = __give_feedback(game_id, guess)    
+    all_user_pins = db.session.execute(db.select(Pin).filter_by(game_id=game_id, players_id=player_id)).scalars().all()
+    amount_of_guesses = int(len(all_user_pins)/number_of_positions)
+
+
     return render_template('game-session.html', nickname=nickname,
-                            number_of_colours=number_of_colours,
-                            number_of_positions=number_of_positions,
-                            doubles_allowed=doubles_allowed,
-                            cheat_modus=cheat_modus,
-                            answer = answer
-                            )
+            number_of_colours=number_of_colours,
+            number_of_positions=number_of_positions,
+            doubles_allowed=doubles_allowed,
+            cheat_modus=cheat_modus,
+            answer = answer,
+            amount_of_guesses=amount_of_guesses,
+            all_user_pins=all_user_pins,
+            feedback=feedback
+            )
+        
+
     
 
 
@@ -441,8 +424,8 @@ def __give_feedback(game_id, guess): # TODO instead of guess use all_user_pins
             else:
                 feedback.append('')# TODO ugly?
                 counter += 1
-            
-    feedback_so_far.append(feedback)
+    if(len(feedback) > 0):
+        feedback_so_far.append(feedback)
     return feedback_so_far # TODO probably not necessary
 
 
