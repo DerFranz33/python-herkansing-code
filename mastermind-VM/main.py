@@ -134,10 +134,7 @@ def game():
 
                 feedback_so_far = []
 
-                
-                
-
-
+ 
                 game_id = __generate_game(positions_length=_number_of_positions,
                                 amount_of_colours=_number_of_colours,
                                 can_be_double=_doubles_allowed,
@@ -145,18 +142,12 @@ def game():
                                 players_name=session['nickname'])
 
 
-                
                 return redirect(url_for('game_session', game_id=game_id))
             else:
                 return render_template('game.html', nickname=nickname)
     else:
         return redirect(url_for('home'))
     
-
-
-
-
-
 
 
 
@@ -169,14 +160,7 @@ def game_session(game_id):
         nickname = session['nickname']
 
 
-
-
-
     game = db.session.execute(db.select(Game).filter_by(id=game_id)).scalar_one_or_none()
-
-
-
-
 
 
     number_of_colours = game.amount_of_colours
@@ -233,30 +217,10 @@ def game_session(game_id):
             )
         
 
-    
-
-
-
-
-
-
-
-
-
 @app.route('/reset_nickname')
 def reset_nickname():
     session.pop('nickname', None)
     return redirect(url_for('home'))
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -272,30 +236,8 @@ def statistics():
             return redirect(url_for('game_session', game_id=game_id))
 
 
-
-
-
-
-
         return render_template('statistics.html', nickname=session['nickname'], player_games=player_games)
     return redirect(url_for('home'))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # --------------- HELPERS AND LOGIC -----------------------
