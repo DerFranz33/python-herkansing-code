@@ -208,7 +208,18 @@ def game_session(game_id):
         if (__is_game_won(answer, guess)):
                     print('TODO yeah game won!!!!')
         else:
-            __give_feedback(game_id, guess)
+            feedback = __give_feedback(game_id, guess)
+            return render_template('game-session.html', nickname=nickname,
+                    number_of_colours=number_of_colours,
+                    number_of_positions=number_of_positions,
+                    doubles_allowed=doubles_allowed,
+                    cheat_modus=cheat_modus,
+                    answer = answer,
+                    amount_of_guesses=amount_of_guesses,
+                    all_user_pins=all_user_pins,
+                    feedback=feedback
+                    )
+
 
         return render_template('game-session.html', nickname=nickname,
                         number_of_colours=number_of_colours,

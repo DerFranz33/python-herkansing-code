@@ -40,6 +40,15 @@
                     </div>
                 {% endfor %}
             {% endif %}
+
+
+            {% if feedback is defined %}
+                    {% for i in range(feedback|length) %}
+                        <div class="col-sm bg-warning">{{feedback[i]}}</div>
+                    {% endfor %}
+            {% endif %}
+
+
             
             <form class="row" action="" method="post">
                 {% for i in range(number_of_positions) %}
